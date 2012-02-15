@@ -21,11 +21,11 @@ $(document).ready(function(){
       );
     }
   );
-
+  refreshEntries();
 });
 
 function refreshEntries() {
-  $('#home ul li:gt(0)').remove();
+ // $('#home ul li:gt(0)').remove();
   db.transaction(
     function(transaction) {
       transaction.executeSql(
@@ -52,6 +52,10 @@ function refreshEntries() {
       );
     }
   );
+}
+
+function home() {
+  refreshEntries();
 }
 
 function createEntry() {
