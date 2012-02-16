@@ -18,6 +18,7 @@
       <ul class="edgetoedge">
         <li id="entryTemplate" class="entry" style="display:none">
         <span class="name">Name</span>
+        ( +<span class="modifier">Modifier</span> )
         <span class="score">Score</span>
         <span class="delete">Delete</span>
         </li>
@@ -28,9 +29,10 @@
         <h1>New Entry</h1>
         <a class="button cancel" href="#">Cancel</a>
       </div>
-      <form method="post">
+      <form method="post" autocomplete="off">
         <ul>
           <li><input type="text" placeholder="Name" name="name" id="name" autocapitalize="off" autocorrect="off" autocomplete="off"/></li>
+          <li><input type="text" placeholder="Modifier" name="modifier" id="modifier" autocapitalize="off" autocorrect="off" autocomplete="off"/></li>
           <li><input type="text" placeholder="Score" name="score" id="score" autocapitalize="off" autocorrect="off" autocomplete="off"/></li>
           <li><input type="submit" class="submit" name="action" value="save"></li>
         </ul>

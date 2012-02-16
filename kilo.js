@@ -14,9 +14,11 @@ $(document).ready(function(){
   db.transaction(
     function (transaction) {
       transaction.executeSql(
+        //'DROP TABLE init;' /*+
         'CREATE TABLE IF NOT EXISTS init ' +
           '(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
             'name TEXT NOT NULL, ' + 
+            'modifier INTEGER NOT NULL, ' +
             'score FLOAT NOT NULL);'
       );
     }
@@ -29,7 +31,7 @@ function refreshEntries() {
   db.transaction(
     function(transaction) {
       transaction.executeSql(
-        'SELECT * FROM init ORDER BY score desc;', [], 
+        'SELECT * FROM init ORDER BY score desc, modifier desc;', [], 
         function (transaction, result) {
           for (var i=0; i < result.rows.length; i++){
             var row = result.rows.item(i);
@@ -39,6 +41,7 @@ function refreshEntries() {
             newEntryRow.data('entryId', row.id);
             newEntryRow.appendTo('#home ul');
             newEntryRow.find('.name').text(row.name);
+            newEntryRow.find('.modifier').text(row.modifier);
             newEntryRow.find('.score').text(row.score);
             newEntryRow.find('.delete').click(function(){
               var clickedEntry = $(this).parent();
@@ -60,12 +63,13 @@ function home() {
 
 function createEntry() {
   var name = $('#name').val();
+  var modifier = $('#modifier').val();
   var score = $('#score').val();
   db.transaction(
     function (transaction) {
       transaction.executeSql(
-        'INSERT INTO init (name, score) VALUES (?, ?);', 
-        [name, score],
+        'INSERT INTO init (name, modifier, score) VALUES (?, ?, ?);', 
+        [name, modifier, score],
         function(){
           refreshEntries();
           jQT.goBack();
