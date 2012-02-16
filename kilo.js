@@ -25,11 +25,11 @@ $(document).ready(function(){
 });
 
 function refreshEntries() {
- // $('#home ul li:gt(0)').remove();
+  $('#home ul li:gt(0)').remove();
   db.transaction(
     function(transaction) {
       transaction.executeSql(
-        'SELECT * FROM init ORDER BY id;', [], 
+        'SELECT * FROM init ORDER BY score desc;', [], 
         function (transaction, result) {
           for (var i=0; i < result.rows.length; i++){
             var row = result.rows.item(i);
