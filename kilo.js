@@ -78,6 +78,9 @@ function createEntry() {
       );
     }
   );
+  $('#name').val("");
+  $('#modifier').val("");
+  $('#score').val("");
   return false;
 }
 
