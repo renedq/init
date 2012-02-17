@@ -41,7 +41,12 @@ function refreshEntries() {
             newEntryRow.data('entryId', row.id);
             newEntryRow.appendTo('#home ul');
             newEntryRow.find('.name').text(row.name);
-            newEntryRow.find('.modifier').text(row.modifier);
+            var mod = row.modifier;
+            if (mod < 0) {
+              newEntryRow.find('.modifier').text(mod);
+            } else {
+              newEntryRow.find('.modifier').text("+"+mod);
+            }
             newEntryRow.find('.score').text(row.score);
             newEntryRow.find('.delete').click(function(){
               var clickedEntry = $(this).parent();
@@ -57,30 +62,32 @@ function refreshEntries() {
   );
 }
 
-function home() {
-  refreshEntries();
+function entryIsValid() {
+  return $('#newpc').valid();
 }
 
 function createEntry() {
-  var name = $('#name').val();
-  var modifier = $('#modifier').val();
-  var score = $('#score').val();
-  db.transaction(
-    function (transaction) {
-      transaction.executeSql(
-        'INSERT INTO init (name, modifier, score) VALUES (?, ?, ?);', 
-        [name, modifier, score],
-        function(){
-          refreshEntries();
-          jQT.goBack();
-        },
-        errorHandler
-      );
-    }
-  );
-  $('#name').val("");
-  $('#modifier').val("");
-  $('#score').val("");
+  if (entryIsValid()) {
+    var name = $('#name').val();
+    var modifier = $('#modifier').val();
+    var score = $('#score').val();
+    db.transaction(
+      function (transaction) {
+        transaction.executeSql(
+          'INSERT INTO init (name, modifier, score) VALUES (?, ?, ?);', 
+          [name, modifier, score],
+          function(){
+            refreshEntries();
+            jQT.goBack();
+          },
+          errorHandler
+        );
+      }
+    );
+    $('#name').val("");
+    $('#modifier').val("");
+    $('#score').val("");
+  }
   return false;
 }
 
