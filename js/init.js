@@ -6,6 +6,8 @@ var jQT = $.jQTouch({
 
 $(document).ready(function(){
   $('#createEntry form').submit(createEntry);
+  $('#combat').bind('pageAnimationStart', combatList);
+
   var shortName = 'init';
   var version = '1.0';
   var displayName = 'init';
@@ -27,7 +29,7 @@ $(document).ready(function(){
 });
 
 function refreshEntries() {
-  $('#home ul li:gt(0)').remove();
+  $('#body-list li:gt(0)').remove();
   db.transaction(
     function(transaction) {
       transaction.executeSql(
@@ -39,7 +41,7 @@ function refreshEntries() {
             newEntryRow.removeAttr('id');
             newEntryRow.removeAttr('style');
             newEntryRow.data('entryId', row.id);
-            newEntryRow.appendTo('#home ul');
+            newEntryRow.appendTo('#body-list');
             newEntryRow.find('.name').text(row.name);
             var mod = row.modifier;
             if (mod < 0) {
@@ -57,6 +59,35 @@ function refreshEntries() {
           }
         },
         errorHandler
+      );
+    }
+  );
+}
+
+function combatList(){
+  $('#combat-list li:gt(0)').remove();
+  db.transaction(
+    function(transaction) {
+      transaction.executeSql(
+        'SELECT * FROM init ORDER BY score desc, modifier desc;', [],
+          function (transaction, result) {
+            for (var i=0; i<result.rows.length; i++){
+              var row = result.rows.item(i);
+              var newEntryRow = $('#combatList').clone();
+              newEntryRow.removeAttr('id');
+              newEntryRow.removeAttr('style');
+              newEntryRow.data('entryId', row.id);
+              newEntryRow.appendTo('#combat-list');
+              newEntryRow.find('.name').text(row.name);
+              newEntryRow.find('.score').text(row.score);
+              newEntryRow.find('.delay').click(function(){
+              var clickedEntry = $(this).parent();
+              var clickedEntryId = clickedEntry.data('entryId');
+                alert('Delay not implemented');
+              });
+            }
+          },
+          errorHandler
       );
     }
   );
