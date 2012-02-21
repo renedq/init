@@ -23,15 +23,15 @@
     color: #FFFFFF;
     text-shadow: rgba(0,0,0,.7) 0 1px 2px;
 }
-#combat ul li .delay {
-    position: absolute;
-    top: 5px;
-    right: 6px;
-    font-size: 12px;
-    line-height: 30px;
-    padding: 0 3px;
-    border-width: 0 5px;
-    -webkit-border-image: url(themes/jqt/img/button.png) 0 5 0 5;
+#combat ul li .token {
+  float: left;
+  margin-right: 10px;
+  left: 10px;
+  position: absolute;
+}
+
+#combat ul li .name {
+  padding-right: 75px;
 }
 
 #combat ul li .score {
@@ -54,3 +54,16 @@
   line-height: 16px;
   padding: 2px 8px 4px 8px;
 }
+
+#combat ul li .delay {
+    position: absolute;
+    top: 5px;
+    right: 6px;
+    font-size: 12px;
+    line-height: 30px;
+    padding: 0 3px;
+    border-width: 0 5px;
+    -webkit-border-image: url(themes/jqt/img/button.png) 0 5 0 5;
+}
+
+
