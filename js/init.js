@@ -46,6 +46,13 @@ function setInitToken(newValue) {
   $($('#combat-list img.token').get(token)).attr("src","images/token.jpg");
 }
 
+function resetInitiative() {
+  round=1;
+  token=0;
+  $('#combat-list img.token').attr("src","images/token_blank.png");
+  $('#round').text(round);
+}
+
 function refreshEntries() {
   $('#body-list li:gt(0)').remove();
   db.transaction(
@@ -68,6 +75,12 @@ function refreshEntries() {
               newEntryRow.find('.modifier').text("+"+mod);
             }
             newEntryRow.find('.score').text(row.score);
+            newEntryRow.find('.edit').click(function(){
+              var clickedEntry = $(this).parent();
+              var clickedEntryId = clickedEntry.data('entryId');
+              deleteEntryById(clickedEntryId);
+              clickedEntry.slideUp();
+            });
             newEntryRow.find('.delete').click(function(){
               var clickedEntry = $(this).parent();
               var clickedEntryId = clickedEntry.data('entryId');
@@ -85,6 +98,7 @@ function refreshEntries() {
 function combatList(){
   $('#combat-list li:gt(0)').remove();
   $('#next').click(nextPC);
+  $('#reset').click(resetInitiative);
   db.transaction(
     function(transaction) {
       transaction.executeSql(
@@ -100,9 +114,9 @@ function combatList(){
               newEntryRow.find('.name').text(row.name);
               newEntryRow.find('.score').text(row.score);
               newEntryRow.find('.delay').click(function(){
-              var clickedEntry = $(this).parent();
-              var clickedEntryId = clickedEntry.data('entryId');
-                alert('Delay not implemented');
+                var clickedEntry = $(this).parent();
+                var clickedEntryId = clickedEntry.data('entryId');
+                  alert('Delay not implemented');
               });
             }
           },
@@ -151,6 +165,14 @@ function deleteEntryById(id){
   db.transaction(
     function(transaction) {
       transaction.executeSql('DELETE FROM init WHERE id=?;', [id], null, errorHandler);
+    }
+  );
+}
+
+function updateInitiative(id){
+  db.transaction(
+    function(transaction) {
+      transaction.executeSql('UPDATE FROM init WHERE id=?;', [id], null, errorHandler);
     }
   );
 }
