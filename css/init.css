@@ -1,35 +1,41 @@
 #home ul li {
-    position: relative;
+  position: relative;
 }
+
 #home ul li span {
-    color: #FFFFFF;
-    text-shadow: rgba(0,0,0,.7) 0 1px 2px;
+  color: #FFFFFF;
+  text-shadow: rgba(0,0,0,.7) 0 1px 2px;
 }
+
 #home ul li .delete {
-    position: absolute;
-    top: 5px;
-    right: 6px;
-    font-size: 12px;
-    line-height: 30px;
-    padding: 0 3px;
-    border-width: 0 5px;
-    -webkit-border-image: url(themes/jqt/img/button.png) 0 5 0 5;
+  position: absolute;
+  top: 5px;
+  right: 6px;
+  font-size: 12px;
+  line-height: 30px;
+  padding: 0 3px;
+  border-width: 0 5px;
+  -webkit-border-image: url(themes/jqt/img/button.png) 0 5 0 5;
+}
+
+#combat .topbar {
+  padding: 10px;
+  font: 16px "Bazooka", Bazooka;
 }
 
 #combat ul li {
-    position: relative;
-    
+  position: relative;
+
 }
 #combat ul li span {
-    color: #FFFFFF;
-    text-shadow: rgba(0,0,0,.7) 0 1px 2px;
+  color: #FFFFFF;
+  text-shadow: rgba(0,0,0,.7) 0 1px 2px;
 }
 #combat ul li .token {
   float: left;
   margin-right: 10px;
   left: 10px;
   top: 10px;
- // position: absolute;
 }
 
 #combat ul li .name {

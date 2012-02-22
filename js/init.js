@@ -1,4 +1,6 @@
 var db;
+var token=0;
+var round=1;
 var jQT = $.jQTouch({
   icon: 'kilo.png',
   statusBar: 'black'
@@ -27,6 +29,22 @@ $(document).ready(function(){
   );
   refreshEntries();
 });
+
+function nextPC() {
+  if (token == ($('.token').length - 1)){
+    setInitToken(1);
+    round++;
+    $('#round').text(round);
+  } else {
+    setInitToken(token + 1);
+  }
+}
+
+function setInitToken(newValue) {
+  $('#combat-list img.token').attr("src","images/token_blank.png");
+  token = newValue;
+  $($('#combat-list img.token').get(token)).attr("src","images/token.jpg");
+}
 
 function refreshEntries() {
   $('#body-list li:gt(0)').remove();
@@ -66,7 +84,7 @@ function refreshEntries() {
 
 function combatList(){
   $('#combat-list li:gt(0)').remove();
-  var token = 0;
+  $('#next').click(nextPC);
   db.transaction(
     function(transaction) {
       transaction.executeSql(
@@ -79,9 +97,6 @@ function combatList(){
               newEntryRow.removeAttr('style');
               newEntryRow.data('entryId', row.id);
               newEntryRow.appendTo('#combat-list');
-              if (i == token){
-                newEntryRow.find('.token').attr("src","images/token.jpg");
-              }
               newEntryRow.find('.name').text(row.name);
               newEntryRow.find('.score').text(row.score);
               newEntryRow.find('.delay').click(function(){
@@ -93,6 +108,7 @@ function combatList(){
           },
           errorHandler
       );
+      setInitToken(token);
     }
   );
 }

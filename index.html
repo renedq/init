@@ -1,7 +1,7 @@
 <!DOCTYPE=html>
 <html>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  
+
   <head>
     <link type="text/css" rel="stylesheet" media="screen" href="css/jqtouch.css">
     <link type="text/css" rel="stylesheet" media="screen" href="css/themes/jqt/theme.css">
@@ -10,63 +10,63 @@
     <script type="text/javascript" src="js/jqtouch.js"></script>
     <script type="text/javascript" src="js/jquery.validate.js"></script>
     <script type="text/javascript" src="js/init.js"></script>
-</script>
-    
-    <title>Pad</title>
-  </head>
-  <body>
-    <div id="home">
-      <div class="toolbar">
-        <h1>Init Pad</h1>
-        <a class="button leftbutton slideup" href="#combat">Start Combat</a>
-        <a class="button slideup" href="#createEntry">+</a>
-      </div>
-      <div class="body">
-        <ul id="body-list" class="edgetoedge">
-          <li id="entryTemplate" class="entry" style="display:none">
-            <span class="name">Name</span>
-            ( <span class="modifier">Modifier</span> )
-            <span class="score">Score</span>
-            <span class="delete">Delete</span>
-          </li>
-        </ul>
-      </div>
+  </script>
+
+  <title>Pad</title>
+</head>
+<body>
+  <div id="home">
+    <div class="toolbar">
+      <h1>Init Pad</h1>
+      <a class="button leftbutton slideup" href="#combat">Start Combat</a>
+      <a class="button slideup" href="#createEntry">+</a>
     </div>
-    <div id="createEntry">
-      <div class="toolbar">
-        <h1>New PC</h1>
-        <a class="button cancel" href="#">Cancel</a>
-      </div>
-      <form action="" method="post" autocomplete="off" id="newpc">
-        <ul>
-          <li><input type="text" placeholder="Name" name="name" id="name" autocapitalize="off" autocorrect="off" autocomplete="off" class="required"/></li>
-          <li><input type="text" placeholder="Modifier" name="modifier" id="modifier" autocapitalize="off" autocorrect="off" autocomplete="off" class="required number"></li>
-          <li><input type="text" placeholder="Score" name="score" id="score" autocapitalize="off" autocorrect="off" autocomplete="off" class="required number"/></li>
-          <li><input type="submit" class="submit" name="action" value="save"></li>
-        </ul>
-      </form>
+    <div class="body">
+      <ul id="body-list" class="edgetoedge">
+        <li id="entryTemplate" class="entry" style="display:none">
+        <span class="name">Name</span>
+        ( <span class="modifier">Modifier</span> )
+        <span class="score">Score</span>
+        <span class="delete">Delete</span>
+        </li>
+      </ul>
     </div>
-    <div id="combat">
-      <div class="toolbar">
-        <h1>Combat</h1>
-        <a class="button back" href="#">Stop</a>
-      </div>
-      <div>round 1</div>
-      <div class="body">
-        <ul id="combat-list" class="edgetoedge">
-          <li id="combatList" class="entry" style="display:none">
-            <img class="token" src="images/token_blank.png">
-            <span class="name">Name</span>
-            <span class="score">Score</span>
-            <span class="delay">Delay</span>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <ul class="individual">
-          <li><a href="#next">Next</a></li>
-        </ul>
-      </div>
+  </div>
+  <div id="createEntry">
+    <div class="toolbar">
+      <h1>New PC</h1>
+      <a class="button cancel" href="#">Cancel</a>
     </div>
-  </body>
+    <form action="" method="post" autocomplete="off" id="newpc">
+      <ul>
+        <li><input type="text" placeholder="Name" name="name" id="name" autocapitalize="off" autocorrect="off" autocomplete="off" class="required"/></li>
+        <li><input type="text" placeholder="Modifier" name="modifier" id="modifier" autocapitalize="off" autocorrect="off" autocomplete="off" class="required number"></li>
+        <li><input type="text" placeholder="Score" name="score" id="score" autocapitalize="off" autocorrect="off" autocomplete="off" class="required number"/></li>
+        <li><input type="submit" class="submit" name="action" value="save"></li>
+      </ul>
+    </form>
+  </div>
+  <div id="combat">
+    <div class="toolbar">
+      <h1>Combat</h1>
+      <a class="button back" href="#">Stop</a>
+    </div>
+    <div class="topbar"><center><h3>Round <span id="round">1</span></h3></center></div>
+    <div class="body">
+      <ul id="combat-list" class="edgetoedge">
+        <li id="combatList" class="entry" style="display:none">
+        <img class="token" src="images/token_blank.png">
+        <span class="name">Name</span>
+        <span class="score">Score</span>
+        <span class="delay">Delay</span>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <ul class="individual">
+        <li><a href="#combat" id="next">Next</a></li>
+      </ul>
+    </div>
+  </div>
+</body>
 </html>
