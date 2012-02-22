@@ -66,6 +66,7 @@ function refreshEntries() {
 
 function combatList(){
   $('#combat-list li:gt(0)').remove();
+  var token = 0;
   db.transaction(
     function(transaction) {
       transaction.executeSql(
@@ -78,6 +79,9 @@ function combatList(){
               newEntryRow.removeAttr('style');
               newEntryRow.data('entryId', row.id);
               newEntryRow.appendTo('#combat-list');
+              if (i == token){
+                newEntryRow.find('.token').attr("src","images/token.jpg");
+              }
               newEntryRow.find('.name').text(row.name);
               newEntryRow.find('.score').text(row.score);
               newEntryRow.find('.delay').click(function(){
