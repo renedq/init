@@ -8,8 +8,6 @@ var jQT = $.jQTouch({
 
 $(document).ready(function(){
   $('#createEntry form').submit(createEntry);
-  //$('#combat').bind('pageAnimationStart', combatList);
-
   var shortName = 'init';
   var version = '1.0';
   var displayName = 'init';
@@ -32,7 +30,7 @@ $(document).ready(function(){
 
 function nextPC() {
   if (token == ($('.token').length - 1)){
-    setInitToken(1);
+    setInitToken(0);
     round++;
     $('#round').text(round);
   } else {
@@ -104,38 +102,6 @@ function refreshEntries() {
 function isNumeric(value){
   return (value - 0) == value && value.length > 0;
 }
-
-/*function combatList(){
-  $('#combat-list li:gt(0)').remove();
-  $('#next').click(nextPC);
-  $('#reset').click(resetInitiative);
-  db.transaction(
-    function(transaction) {
-      transaction.executeSql(
-        'SELECT * FROM init ORDER BY score desc, modifier desc;', [],
-          function (transaction, result) {
-            for (var i=0; i<result.rows.length; i++){
-              var row = result.rows.item(i);
-              var newEntryRow = $('#combatList').clone();
-              newEntryRow.removeAttr('id');
-              newEntryRow.removeAttr('style');
-              newEntryRow.data('entryId', row.id);
-              newEntryRow.appendTo('#combat-list');
-              newEntryRow.find('.name').text(row.name);
-              newEntryRow.find('.score').text(row.score);
-              newEntryRow.find('.delay').click(function(){
-                var clickedEntry = $(this).parent();
-                var clickedEntryId = clickedEntry.data('entryId');
-                  alert('Delay not implemented');
-              });
-            }
-          },
-          errorHandler
-      );
-      setInitToken(token);
-    }
-  );
-}*/
 
 function entryIsValid() {
   return $('#newpc').valid();
