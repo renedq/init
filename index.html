@@ -23,13 +23,20 @@
     </div>
     <div class="body">
       <ul id="body-list" class="edgetoedge">
+        <div class="topbar"><center><h3>Round <span id="round">1</span></h3></center></div>
         <li id="entryTemplate" class="entry" style="display:none">
+        <img class="token" src="images/token_blank.png">
         <span class="name">Name</span>
-        ( <span class="modifier">Modifier</span> )
-        <span class="score">Score</span>
-        <span class="edit">Edit</span>
+        <span class="modifier">Modifier</span>
+        <input type="text" class="score number" value="Score"/>
         <span class="delete">Delete</span>
         </li>
+      </ul>
+    </div>
+    <div>
+      <ul class="individual">
+        <li><a href="#home" id="next">Next</a></li>
+        <li><a href="#home" id="reset">Reset</a></li>
       </ul>
     </div>
   </div>
@@ -46,12 +53,6 @@
         <li><input type="submit" class="submit" name="action" value="save"></li>
       </ul>
     </form>
-  </div>
-  <div id="editPC">
-    <div class="toolbar">
-      <h1>Edit</h1>
-      <a class="button cancel" href="#">Cancel</a>
-    </div>
   </div>
   <div id="combat">
     <div class="toolbar">

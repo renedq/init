@@ -8,7 +8,7 @@ var jQT = $.jQTouch({
 
 $(document).ready(function(){
   $('#createEntry form').submit(createEntry);
-  $('#combat').bind('pageAnimationStart', combatList);
+  //$('#combat').bind('pageAnimationStart', combatList);
 
   var shortName = 'init';
   var version = '1.0';
@@ -41,20 +41,22 @@ function nextPC() {
 }
 
 function setInitToken(newValue) {
-  $('#combat-list img.token').attr("src","images/token_blank.png");
+  $('#home img.token').attr("src","images/token_blank.png");
   token = newValue;
-  $($('#combat-list img.token').get(token)).attr("src","images/token.jpg");
+  $($('#home img.token').get(token)).attr("src","images/token.jpg");
 }
 
 function resetInitiative() {
   round=1;
   token=0;
-  $('#combat-list img.token').attr("src","images/token_blank.png");
+  $('#home img.token').attr("src","images/token_blank.png");
   $('#round').text(round);
 }
 
 function refreshEntries() {
   $('#body-list li:gt(0)').remove();
+  $('#next').click(nextPC);
+  $('#reset').click(resetInitiative);
   db.transaction(
     function(transaction) {
       transaction.executeSql(
@@ -74,12 +76,16 @@ function refreshEntries() {
             } else {
               newEntryRow.find('.modifier').text("+"+mod);
             }
-            newEntryRow.find('.score').text(row.score);
-            newEntryRow.find('.edit').click(function(){
+            newEntryRow.find('.score').val(row.score);
+            newEntryRow.find('.score').change(function(){
+              var score = $(this).val();
+              if (!isNumeric(score)) {
+                score = 0;
+              }
               var clickedEntry = $(this).parent();
               var clickedEntryId = clickedEntry.data('entryId');
-              deleteEntryById(clickedEntryId);
-              clickedEntry.slideUp();
+              updateInitiative(clickedEntryId, score);
+              refreshEntries();
             });
             newEntryRow.find('.delete').click(function(){
               var clickedEntry = $(this).parent();
@@ -95,7 +101,11 @@ function refreshEntries() {
   );
 }
 
-function combatList(){
+function isNumeric(value){
+  return (value - 0) == value && value.length > 0;
+}
+
+/*function combatList(){
   $('#combat-list li:gt(0)').remove();
   $('#next').click(nextPC);
   $('#reset').click(resetInitiative);
@@ -125,7 +135,7 @@ function combatList(){
       setInitToken(token);
     }
   );
-}
+}*/
 
 function entryIsValid() {
   return $('#newpc').valid();
@@ -169,10 +179,10 @@ function deleteEntryById(id){
   );
 }
 
-function updateInitiative(id){
+function updateInitiative(id, score){
   db.transaction(
     function(transaction) {
-      transaction.executeSql('UPDATE FROM init WHERE id=?;', [id], null, errorHandler);
+      transaction.executeSql('UPDATE init SET score=? WHERE id = ? ;', [score, id]);
     }
   );
 }
