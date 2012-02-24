@@ -1,5 +1,5 @@
 var db;
-var token=0;
+var token=1;
 var round=1;
 var jQT = $.jQTouch({
   icon: 'kilo.png',
@@ -13,20 +13,29 @@ $(document).ready(function(){
   var displayName = 'init';
   var maxSize = 65536;
   db = openDatabase(shortName, version, displayName, maxSize);
-  db.transaction(
-    function (transaction) {
-      transaction.executeSql(
-        //'DROP TABLE init;' /*+
-        'CREATE TABLE IF NOT EXISTS init ' +
-          '(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-            'name TEXT NOT NULL, ' + 
-            'modifier INTEGER NOT NULL, ' +
-            'score FLOAT NOT NULL);'
-      );
-    }
-  );
+  createTable();
   refreshEntries();
 });
+
+function dropTable(){
+  runSQL("DROP TABLE init;");
+}
+
+function createTable(){
+  runSQL('CREATE TABLE IF NOT EXISTS init ' +
+          '(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+          'name TEXT NOT NULL, ' + 
+          'modifier INTEGER NOT NULL, ' +
+          'score FLOAT NOT NULL);');
+}
+
+function runSQL(SQL, vars, func){
+  db.transaction(
+    function (transaction){
+      transaction.executeSql(SQL, vars, func, errorHandler);
+    }
+  );
+}
 
 function nextPC() {
   if (token == ($('.token').length - 1)){
@@ -51,52 +60,53 @@ function resetInitiative() {
   $('#round').text(round);
 }
 
+function clear(){
+  dropTable();
+  createTable();
+  refreshEntries();
+}
+
 function refreshEntries() {
   $('#body-list li:gt(0)').remove();
   $('#next').click(nextPC);
   $('#reset').click(resetInitiative);
-  db.transaction(
-    function(transaction) {
-      transaction.executeSql(
-        'SELECT * FROM init ORDER BY score desc, modifier desc;', [], 
-        function (transaction, result) {
-          for (var i=0; i < result.rows.length; i++){
-            var row = result.rows.item(i);
-            var newEntryRow = $('#entryTemplate').clone();
-            newEntryRow.removeAttr('id');
-            newEntryRow.removeAttr('style');
-            newEntryRow.data('entryId', row.id);
-            newEntryRow.appendTo('#body-list');
-            newEntryRow.find('.name').text(row.name);
-            var mod = row.modifier;
-            if (mod < 0) {
-              newEntryRow.find('.modifier').text(mod);
-            } else {
-              newEntryRow.find('.modifier').text("+"+mod);
-            }
-            newEntryRow.find('.score').val(row.score);
-            newEntryRow.find('.score').change(function(){
-              var score = $(this).val();
-              if (!isNumeric(score)) {
-                score = 0;
-              }
-              var clickedEntry = $(this).parent();
-              var clickedEntryId = clickedEntry.data('entryId');
-              updateInitiative(clickedEntryId, score);
-              refreshEntries();
-            });
-            newEntryRow.find('.delete').click(function(){
-              var clickedEntry = $(this).parent();
-              var clickedEntryId = clickedEntry.data('entryId');
-              deleteEntryById(clickedEntryId);
-              clickedEntry.slideUp();
-            });
-          }
-        },
-        errorHandler
-      );
-    }
-  );
+  $('#clear').click(clear);
+  runSQL('SELECT * FROM init ORDER BY score desc, modifier desc;', [], 
+         function (transaction, result) {
+           for (var i=0; i < result.rows.length; i++){
+             var row = result.rows.item(i);
+             var newEntryRow = $('#entryTemplate').clone();
+             newEntryRow.removeAttr('id');
+             newEntryRow.removeAttr('style');
+             newEntryRow.data('entryId', row.id);
+             newEntryRow.appendTo('#body-list');
+             newEntryRow.find('.name').text(row.name);
+             var mod = row.modifier;
+             if (mod < 0) {
+               newEntryRow.find('.modifier').text(mod);
+             } else {
+               newEntryRow.find('.modifier').text("+"+mod);
+             }
+             newEntryRow.find('.score').val(row.score);
+             newEntryRow.find('.score').change(function(){
+               var score = $(this).val();
+               if (!isNumeric(score)) {
+                 score = 0;
+               }
+               var clickedEntry = $(this).parent();
+               var clickedEntryId = clickedEntry.data('entryId');
+               updateInitiative(clickedEntryId, score);
+               refreshEntries();
+             });
+             newEntryRow.find('.delete').click(function(){
+               var clickedEntry = $(this).parent();
+               var clickedEntryId = clickedEntry.data('entryId');
+               deleteEntryById(clickedEntryId);
+               clickedEntry.slideUp();
+             });
+           }
+         }
+        );
 }
 
 function isNumeric(value){
@@ -112,17 +122,11 @@ function createEntry() {
     var name = $('#name').val();
     var modifier = $('#modifier').val();
     var score = $('#score').val();
-    db.transaction(
-      function (transaction) {
-        transaction.executeSql(
-          'INSERT INTO init (name, modifier, score) VALUES (?, ?, ?);', 
-          [name, modifier, score],
-          function(){
-            refreshEntries();
-            jQT.goBack();
-          },
-          errorHandler
-        );
+    runSQL('INSERT INTO init (name, modifier, score) VALUES (?, ?, ?);', 
+      [name, modifier, score],
+      function(){
+        refreshEntries();
+        jQT.goBack();
       }
     );
     $('#name').val("");
@@ -138,17 +142,9 @@ function errorHandler(transaction, error) {
 }
 
 function deleteEntryById(id){
-  db.transaction(
-    function(transaction) {
-      transaction.executeSql('DELETE FROM init WHERE id=?;', [id], null, errorHandler);
-    }
-  );
+  runSQL('DELETE FROM init WHERE id=?;', [id], null);
 }
 
 function updateInitiative(id, score){
-  db.transaction(
-    function(transaction) {
-      transaction.executeSql('UPDATE init SET score=? WHERE id = ? ;', [score, id]);
-    }
-  );
+  runSQL('UPDATE init SET score=? WHERE id = ? ;', [score, id]);
 }

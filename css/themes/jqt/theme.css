@@ -44,28 +44,6 @@ body.landscape .toolbar > h1 {
     margin-left: -125px;
     width: 250px;
 }
-.button_rene{
-    position: absolute;
-    overflow: hidden;
-    top: 8px;
-    left: 10px;
-    margin: 0;
-    border-width: 0 5px;
-    padding: 0 3px;
-    width: auto;
-    height: 30px;
-    line-height: 30px;
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: bold;
-    color: #fff;
-    text-shadow: rgba(0, 0, 0, 0.5) 0px -1px 0;
-    text-overflow: ellipsis;
-    text-decoration: none;
-    white-space: nowrap;
-    background: none;
-    -webkit-border-image: url(img/button.png) 0 5 0 5;
-}
 
 .button, .back, .cancel, .add {
     position: absolute;
@@ -105,9 +83,10 @@ body.landscape .toolbar > h1 {
     -webkit-border-image: url(img/back_button_clicked.png) 0 8 0 14;
     color: #aaa;
 }
-.leftButton, .cancel {
+.leftButton, .cancel #clear{
     left: 6px;
     right: auto;
+    -webkit-border-image: url(img/button.png) 0 5 0 5;
 }
 .add {
     font-size: 24px;
