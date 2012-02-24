@@ -132,9 +132,8 @@ function createEntry() {
   if (entryIsValid()) {
     var name = $('#name').val();
     var modifier = $('#modifier').val();
-    var score = $('#score').val();
-    runSQL('INSERT INTO init (name, modifier, score) VALUES (?, ?, ?);', 
-      [name, modifier, score],
+    runSQL('INSERT INTO init (name, modifier, score) VALUES (?, ?, 0);', 
+      [name, modifier],
       function(){
         refreshEntries();
         jQT.goBack();
@@ -142,7 +141,6 @@ function createEntry() {
     );
     $('#name').val("");
     $('#modifier').val("");
-    $('#score').val("");
 }
   return false;
 }
