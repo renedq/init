@@ -72,41 +72,41 @@ function refreshEntries() {
   $('#reset').click(resetInitiative);
   $('#clear').click(clear);
   runSQL('SELECT * FROM init ORDER BY score desc, modifier desc;', [], 
-         function (transaction, result) {
-           for (var i=0; i < result.rows.length; i++){
-             var row = result.rows.item(i);
-             var newEntryRow = $('#entryTemplate').clone();
-             newEntryRow.removeAttr('id');
-             newEntryRow.removeAttr('style');
-             newEntryRow.data('entryId', row.id);
-             newEntryRow.appendTo('#body-list');
-             newEntryRow.find('.name').text(row.name);
-             var mod = row.modifier;
-             if (mod < 0) {
-               newEntryRow.find('.modifier').text(mod);
-             } else {
-               newEntryRow.find('.modifier').text("+"+mod);
-             }
-             newEntryRow.find('.score').val(row.score);
-             newEntryRow.find('.score').change(function(){
-               var score = $(this).val();
-               if (!isNumeric(score)) {
-                 score = 0;
-               }
-               var clickedEntry = $(this).parent();
-               var clickedEntryId = clickedEntry.data('entryId');
-               updateInitiative(clickedEntryId, score);
-               refreshEntries();
-             });
-             newEntryRow.find('.delete').click(function(){
-               var clickedEntry = $(this).parent();
-               var clickedEntryId = clickedEntry.data('entryId');
-               deleteEntryById(clickedEntryId);
-               clickedEntry.slideUp();
-             });
-           }
-         }
-        );
+    function (transaction, result) {
+      for (var i=0; i < result.rows.length; i++){
+        var row = result.rows.item(i);
+        var newEntryRow = $('#entryTemplate').clone();
+        newEntryRow.removeAttr('id');
+        newEntryRow.removeAttr('style');
+        newEntryRow.data('entryId', row.id);
+        newEntryRow.appendTo('#body-list');
+        newEntryRow.find('.name').text(row.name);
+        var mod = row.modifier;
+        if (mod < 0) {
+          newEntryRow.find('.modifier').text(mod);
+        } else {
+          newEntryRow.find('.modifier').text("+"+mod);
+        }
+        newEntryRow.find('.score').val(row.score);
+        newEntryRow.find('.score').change(function(){
+          var score = $(this).val();
+          if (!isNumeric(score)) {
+            score = 0;
+          }
+          var clickedEntry = $(this).parent();
+          var clickedEntryId = clickedEntry.data('entryId');
+          updateInitiative(clickedEntryId, score);
+          refreshEntries();
+        });
+        newEntryRow.find('.delete').click(function(){
+          var clickedEntry = $(this).parent();
+          var clickedEntryId = clickedEntry.data('entryId');
+          deleteEntryById(clickedEntryId);
+          clickedEntry.slideUp();
+        });
+      }
+    }
+  );
 }
 
 function isNumeric(value){
@@ -132,7 +132,7 @@ function createEntry() {
     $('#name').val("");
     $('#modifier').val("");
     $('#score').val("");
-  }
+}
   return false;
 }
 
@@ -143,6 +143,7 @@ function errorHandler(transaction, error) {
 
 function deleteEntryById(id){
   runSQL('DELETE FROM init WHERE id=?;', [id], null);
+  refreshEntries();
 }
 
 function updateInitiative(id, score){
