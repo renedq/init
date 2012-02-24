@@ -38,12 +38,14 @@ function runSQL(SQL, vars, func){
 }
 
 function nextPC() {
-  if (token == ($('.token').length - 1)){
-    setInitToken(0);
-    round++;
-    $('#round').text(round);
-  } else {
-    setInitToken(token + 1);
+  if ($('.token').length > 1){
+    if (token >= ($('.token').length - 1)){
+      setInitToken(0);
+      round++;
+      $('#round').text(round);
+    } else {
+      setInitToken(token + 1);
+    }
   }
 }
 
@@ -55,7 +57,7 @@ function setInitToken(newValue) {
 
 function resetInitiative() {
   round=1;
-  token=0;
+  token=1;
   $('#home img.token').attr("src","images/token_blank.png");
   $('#round').text(round);
 }
@@ -63,6 +65,9 @@ function resetInitiative() {
 function clear(){
   dropTable();
   createTable();
+  token=1;
+  round=1;
+  $('#round').text(round);
   refreshEntries();
 }
 
