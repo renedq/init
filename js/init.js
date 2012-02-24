@@ -63,6 +63,11 @@ function resetInitiative() {
 }
 
 function clear(){
+  runSQL('UPDATE init SET score=0');
+  refreshEntries();
+}
+
+function clearAll(){
   dropTable();
   createTable();
   token=1;
@@ -76,6 +81,7 @@ function refreshEntries() {
   $('#next').click(nextPC);
   $('#reset').click(resetInitiative);
   $('#clear').click(clear);
+  $('#clearAll').click(clearAll);
   runSQL('SELECT * FROM init ORDER BY score desc, modifier desc;', [], 
     function (transaction, result) {
       for (var i=0; i < result.rows.length; i++){
