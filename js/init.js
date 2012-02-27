@@ -1,5 +1,5 @@
 var db;
-var token=1;
+var token=0;
 var round=1;
 var jQT = $.jQTouch({
   icon: 'kilo.png',
@@ -40,7 +40,7 @@ function runSQL(SQL, vars, func){
 function nextPC() {
   if ($('.token').length > 1){
     if (token >= ($('.token').length - 1)){
-      setInitToken(0);
+      setInitToken(1);
       round++;
       $('#round').text(round);
     } else {
@@ -57,7 +57,7 @@ function setInitToken(newValue) {
 
 function resetInitiative() {
   round=1;
-  token=1;
+  token=0;
   $('#home img.token').attr("src","images/token_blank.png");
   $('#round').text(round);
 }
