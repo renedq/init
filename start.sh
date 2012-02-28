@@ -1,3 +1,3 @@
 #!/bin/bash
-
-python -m SimpleHTTPServer
+cd public
+python -m SimpleHTTPServer $1
