@@ -9,7 +9,7 @@ var jQT = $.jQTouch({
 $(document).ready(function(){
   $('#createEntry form').submit(createEntry);
   var shortName = 'init';
-  var version = '1.0';
+  var version = '1.01';
   var displayName = 'init';
   var maxSize = 65536;
   db = openDatabase(shortName, version, displayName, maxSize);
