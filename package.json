@@ -1,0 +1,15 @@
+{
+  "name"          : "Init", 
+  "version"       : "0.0.1", 
+  "description"   : "Init", 
+  "homepage"      : [ "http://init.windycitypathfinder.com"], 
+  "repository"    : { "type" : "git", "url"  : "git://git@github.com/renedq/init" }, 
+  "author"        : "Rene Duquesnoy <web@reneduquesnoy.com>", 
+  "contributors"  : [ ], 
+  "maintainers"   : "Rene Duquesnoy <web@reneduquesnoy.com>", 
+  "dependencies"  : ["jsdom"],
+  "devDependencies"  : ["underscore"],
+  "engines": {
+    "node": ">=0.4.0"
+  }
+}
