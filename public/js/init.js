@@ -1,4 +1,54 @@
 (function() {
+  var shortName = 'init';
+  var version = '1.01';
+  var displayName = 'init';
+  var maxSize = 65536;
+  var db;
+
+  this.eachPlayer = function(callback) {
+    runSQL('SELECT * FROM init ORDER BY score desc, modifier desc;', [], 
+      function (__, result) {
+        for (var i=0; i < result.rows.length; i++){
+          var row = result.rows.item(i);
+          callback(row);
+        }
+      }
+    );
+  };
+
+  this.__db = function() {
+    if (!db) 
+      db = openDatabase(shortName, version, displayName, maxSize);
+    return db;
+  };
+
+  function runSQL(SQL, vars, callback){
+    __db().transaction(
+      function (transaction){
+        transaction.executeSql(SQL, vars, callback, errorHandler);
+      }
+    );
+  }
+
+  function dropTable(){
+    runSQL("DROP TABLE init;");
+  }
+
+  function createTable(){
+    runSQL('CREATE TABLE IF NOT EXISTS init ' +
+            '(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+            'name TEXT NOT NULL, ' + 
+            'modifier INTEGER NOT NULL, ' +
+            'score FLOAT NOT NULL);');
+  }
+
+  function errorHandler(transaction, error) {
+    alert('Oops. Error was '+error.message+' (Code '+error.code+')');
+    return true;
+  }
+})();
+
+(function() {
   var db;
   var token=0;
   var round=1;
@@ -13,11 +63,7 @@
 
   $(document).ready(function(){
     $('#createEntry form').submit(createEntry);
-    var shortName = 'init';
-    var version = '1.01';
-    var displayName = 'init';
-    var maxSize = 65536;
-    db = openDatabase(shortName, version, displayName, maxSize);
+    db = __db();
     createTable();
     refreshEntries();
   });
@@ -87,42 +133,37 @@
     $('#reset').click(resetInitiative);
     $('#clear').click(clear);
     $('#clearAll').click(clearAll);
-    runSQL('SELECT * FROM init ORDER BY score desc, modifier desc;', [], 
-      function (transaction, result) {
-        for (var i=0; i < result.rows.length; i++){
-          var row = result.rows.item(i);
-          var newEntryRow = $('#entryTemplate').clone();
-          newEntryRow.removeAttr('id');
-          newEntryRow.removeAttr('style');
-          newEntryRow.data('entryId', row.id);
-          newEntryRow.appendTo('#body-list');
-          newEntryRow.find('.name').text(row.name);
-          var mod = row.modifier;
-          if (mod < 0) {
-            newEntryRow.find('.modifier').text(mod);
-          } else {
-            newEntryRow.find('.modifier').text("+"+mod);
-          }
-          newEntryRow.find('.score').val(row.score);
-          newEntryRow.find('.score').change(function(){
-            var score = $(this).val();
-            if (!isNumeric(score)) {
-              score = 0;
-            }
-            var clickedEntry = $(this).parent();
-            var clickedEntryId = clickedEntry.data('entryId');
-            updateInitiative(clickedEntryId, score);
-            refreshEntries();
-          });
-          newEntryRow.find('.delete').click(function(){
-            var clickedEntry = $(this).parent();
-            var clickedEntryId = clickedEntry.data('entryId');
-            deleteEntryById(clickedEntryId);
-            clickedEntry.slideUp();
-          });
-        }
+    eachPlayer(function(row) {
+      var newEntryRow = $('#entryTemplate').clone();
+      newEntryRow.removeAttr('id');
+      newEntryRow.removeAttr('style');
+      newEntryRow.data('entryId', row.id);
+      newEntryRow.appendTo('#body-list');
+      newEntryRow.find('.name').text(row.name);
+      var mod = row.modifier;
+      if (mod < 0) {
+        newEntryRow.find('.modifier').text(mod);
+      } else {
+        newEntryRow.find('.modifier').text("+"+mod);
       }
-    );
+      newEntryRow.find('.score').val(row.score);
+      newEntryRow.find('.score').change(function(){
+        var score = $(this).val();
+        if (!isNumeric(score)) {
+          score = 0;
+        }
+        var clickedEntry = $(this).parent();
+        var clickedEntryId = clickedEntry.data('entryId');
+        updateInitiative(clickedEntryId, score);
+        refreshEntries();
+      });
+      newEntryRow.find('.delete').click(function(){
+        var clickedEntry = $(this).parent();
+        var clickedEntryId = clickedEntry.data('entryId');
+        deleteEntryById(clickedEntryId);
+        clickedEntry.slideUp();
+      });
+    });
   }
 
   function isNumeric(value){
