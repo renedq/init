@@ -37,5 +37,11 @@ describe('Datastore', function() {
 
       expect(players).toEqual(mockData);
     });
+
+    it('uses the error handler when running queries', function() {
+      alert("ello");
+      var handler = mockTransaction.executeSql.argsForCall[0][3];
+      expect(errorHandler).toEqual(handler);
+    });
   });
 });

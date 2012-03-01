@@ -37,6 +37,7 @@ function loadScripts(dir, recurse) {
   });
 }
 
+global.alert = function() {console.log.apply(this, arguments);};
 global.openDatabase = function(){};
 
 loadScripts('', false);
