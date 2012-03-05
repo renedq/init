@@ -6,6 +6,7 @@
   var db;
 
   this.eachPlayer = function(callback) {
+    createTable();
     runSQL('SELECT * FROM init ORDER BY score desc, modifier desc;', [], 
       function (__, result) {
         for (var i=0; i < result.rows.length; i++){
@@ -36,7 +37,6 @@
   }
 
   function createTable(){
-    // FIXME Not tested
     runSQL('CREATE TABLE IF NOT EXISTS init ' +
             '(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
             'name TEXT NOT NULL, ' + 

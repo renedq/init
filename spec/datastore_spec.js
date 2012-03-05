@@ -15,19 +15,21 @@ describe('Datastore', function() {
       eachPlayer(function(player) {
         players.push(player);
       });
-      execFunc = mockDB.transaction.argsForCall[0][0];
       mockTransaction = jasmine.createSpyObj('mock transaction', ['executeSql']);
-      execFunc(mockTransaction);
+      _.each(mockDB.transaction.argsForCall, function(args) {
+        execFunc = args[0];
+        execFunc(mockTransaction);
+      });
     });
 
     it('sorts by score and modifier descending', function() {
       var expectedSql = 'SELECT * FROM init ORDER BY score desc, modifier desc;';
-      expect(mockTransaction.executeSql.argsForCall[0][0]).toEqual(expectedSql);
+      expect(mockTransaction.executeSql.argsForCall[1][0]).toEqual(expectedSql);
     });
 
     it('invokes the callback once for each player', function() {
       var mockData = [{id:0, name:"Carl", modifier:3, score:19}];
-      var executeSqlCallback = mockTransaction.executeSql.argsForCall[0][2];
+      var executeSqlCallback = mockTransaction.executeSql.argsForCall[1][2];
       executeSqlCallback('',{
         rows: {
           length: mockData.length, 
@@ -39,9 +41,18 @@ describe('Datastore', function() {
     });
 
     it('uses the error handler when running queries', function() {
-      alert("ello");
+      spyOn(global, 'alert');
       var handler = mockTransaction.executeSql.argsForCall[0][3];
-      expect(errorHandler).toEqual(handler);
+      var error = {
+        message: "bad",
+        code: 1
+      };
+      expect(handler(1,error)).toBeTruthy();
+      expect(global.alert).toHaveBeenCalledWith("Oops. Error was bad (Code 1)");
+    });
+
+    it('creates the table if it does not exist', function() {
+      expect(mockTransaction.executeSql.argsForCall[0][0]).toMatch(/^CREATE TABLE IF NOT EXISTS init*./);
     });
   });
 });
