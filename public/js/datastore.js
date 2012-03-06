@@ -6,7 +6,6 @@
   var connection;
 
   this.eachPlayer = function(callback) {
-    createPlayerTable();
     runSQL('SELECT * FROM init ORDER BY score desc, modifier desc;', [], 
       function (__, result) {
         for (var i=0; i < result.rows.length; i++){
@@ -18,7 +17,6 @@
   };
 
   this.addPlayer = function(name, modifier, callback) {
-    createPlayerTable();
     runSQL('INSERT INTO init (name, modifier, score) VALUES (?, ?, 0);', 
        [name, modifier], callback);
   }
@@ -27,10 +25,11 @@
     runSQL('DELETE FROM init WHERE id=?;', [id]);
   }
 
-  // FIXME This needs a new name
-  this.clearPlayers = function(){
+  this.resetDatastore = function(){
     runSQL("DROP TABLE IF EXISTS init;");
     runSQL("DROP TABLE IF EXISTS settings;");
+    createAllTables();
+    setRound(1);
   }
 
   this.clearScores = function(callback) {
@@ -42,9 +41,6 @@
   }
 
   this.setRound = function(roundNum) {
-    createTable('settings', 
-      '(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
-      'round INTEGER NOT NULL);'); 
     runSQL('INSERT or REPLACE INTO settings(id, round) VALUES(0,?);', [roundNum]);
   }
 
@@ -55,8 +51,10 @@
   }
 
   function dbConn() {
-    if (!connection) 
+    if (!connection) {
       connection = openDatabase(shortName, version, displayName, maxSize);
+      createAllTables();
+    }
     return connection;
   };
 
@@ -68,7 +66,10 @@
     );
   }
 
-  function createPlayerTable(){
+  function createAllTables() {
+    createTable('settings', 
+      '(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
+      'round INTEGER NOT NULL);'); 
     createTable('init', 
       '(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
       'name TEXT NOT NULL, ' + 

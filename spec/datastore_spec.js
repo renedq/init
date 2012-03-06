@@ -1,6 +1,6 @@
 describe('Datastore', function() {
   afterEach(function() {
-    clearPlayers();
+    resetDatastore();
   });
 
   function getPlayers() {
@@ -27,7 +27,7 @@ describe('Datastore', function() {
   });
 
   it('can clear the players even if there arent any', function() {
-    clearPlayers();
+    resetDatastore();
     expect(getPlayers()).toEqual([]);
   });
 
@@ -38,6 +38,12 @@ describe('Datastore', function() {
       round = r;
     });
     expect(round).toEqual(42);
+  });
+
+  it('is the first round by default', function() {
+    withRound(function(r) {
+      expect(r).toEqual(1);
+    });
   });
 
   describe('when players are added', function() {

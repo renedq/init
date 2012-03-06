@@ -1,6 +1,6 @@
 (function() {
   var token=0;
-  var round=1;
+  var round=1; // FIXME Die die die
   var jQT = $.jQTouch({
     icon: 'kilo.png',
     statusBar: 'black'
@@ -41,7 +41,7 @@
   }
 
   function clearAll(){
-    clearPlayers();
+    resetDatastore();
     token=1;
     round=1;
     $('#round').text(round);
