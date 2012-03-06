@@ -1,5 +1,4 @@
 (function() {
-  var db;
   var token=0;
   var round=1;
   var jQT = $.jQTouch({
@@ -9,7 +8,6 @@
 
   $(document).ready(function(){
     $('#createEntry form').submit(createEntry);
-    db = __db();
     refreshEntries();
   });
 
@@ -83,7 +81,8 @@
       newEntryRow.find('.delete').click(function(){
         var clickedEntry = $(this).parent();
         var clickedEntryId = clickedEntry.data('entryId');
-        deleteEntryById(clickedEntryId);
+        deletePlayer(clickedEntryId);
+        refreshEntries();
         clickedEntry.slideUp();
       });
     });
@@ -114,10 +113,5 @@
   function errorHandler(transaction, error) {
     alert('Oops. Error was '+error.message+' (Code '+error.code+')');
     return true;
-  }
-
-  function deleteEntryById(id){
-    runSQL('DELETE FROM init WHERE id=?;', [id], null);
-    refreshEntries();
   }
 })();

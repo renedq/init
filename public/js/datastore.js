@@ -3,7 +3,7 @@
   var version = '1.01';
   var displayName = 'init';
   var maxSize = 65536;
-  var db;
+  var connection;
 
   this.eachPlayer = function(callback) {
     createTable();
@@ -23,8 +23,12 @@
        [name, modifier], callback);
   }
   
+  this.deletePlayer = function(id) {
+    runSQL('DELETE FROM init WHERE id=?;', [id]);
+  }
+
   this.clearPlayers = function(){
-    runSQL("DROP TABLE init;");
+    runSQL("DROP TABLE IF EXISTS init;");
   }
 
   this.clearScores = function(callback) {
@@ -35,14 +39,14 @@
     runSQL('UPDATE init SET score=? WHERE id = ? ;', [score, id]);
   }
 
-  this.__db = function() {
-    if (!db) 
-      db = openDatabase(shortName, version, displayName, maxSize);
-    return db;
+  function dbConn() {
+    if (!connection) 
+      connection = openDatabase(shortName, version, displayName, maxSize);
+    return connection;
   };
 
   function runSQL(SQL, vars, callback){
-    __db().transaction(
+    dbConn().transaction(
       function (transaction){
         transaction.executeSql(SQL, vars, callback, errorHandler);
       }
