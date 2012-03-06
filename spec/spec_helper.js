@@ -3,6 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 var specDir = path.dirname(fs.realpathSync(__filename));
+var sqlitedb = require("node-sqlite");
 require.paths.push(path.join(specDir, '../public/js'));
 
 var jsdom = require("jsdom");
@@ -36,9 +37,11 @@ function loadScripts(dir, recurse) {
     }
   });
 }
-
+fs.mkdir("testdbs", 0777);
 global.alert = function() {console.log.apply(this, arguments);};
-global.openDatabase = function(){};
+global.openDatabase = function(shortName, version, displayName, maxSize) {
+  return sqlitedb.openDatabaseSync("testdbs/" + shortName + version + displayName + ".db");
+}
 
 loadScripts('', false);
 

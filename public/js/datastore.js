@@ -17,6 +17,24 @@
     );
   };
 
+  this.addPlayer = function(name, modifier, callback) {
+    createTable();
+    runSQL('INSERT INTO init (name, modifier, score) VALUES (?, ?, 0);', 
+       [name, modifier], callback);
+  }
+  
+  this.clearPlayers = function(){
+    runSQL("DROP TABLE init;");
+  }
+
+  this.clearScores = function(callback) {
+    runSQL('UPDATE init SET score=0', [], callback);
+  };
+
+  this.updateScore = function(id, score) {
+    runSQL('UPDATE init SET score=? WHERE id = ? ;', [score, id]);
+  }
+
   this.__db = function() {
     if (!db) 
       db = openDatabase(shortName, version, displayName, maxSize);
@@ -29,11 +47,6 @@
         transaction.executeSql(SQL, vars, callback, errorHandler);
       }
     );
-  }
-
-  function dropTable(){
-    // FIXME Not tested
-    runSQL("DROP TABLE init;");
   }
 
   function createTable(){

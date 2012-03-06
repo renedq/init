@@ -7,36 +7,11 @@
     statusBar: 'black'
   });
 
-  this.awesome = function() {
-    return true;
-  }
-
   $(document).ready(function(){
     $('#createEntry form').submit(createEntry);
     db = __db();
-    createTable();
     refreshEntries();
   });
-
-  function dropTable(){
-    runSQL("DROP TABLE init;");
-  }
-
-  function createTable(){
-    runSQL('CREATE TABLE IF NOT EXISTS init ' +
-            '(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-            'name TEXT NOT NULL, ' + 
-            'modifier INTEGER NOT NULL, ' +
-            'score FLOAT NOT NULL);');
-  }
-
-  function runSQL(SQL, vars, func){
-    db.transaction(
-      function (transaction){
-        transaction.executeSql(SQL, vars, func, errorHandler);
-      }
-    );
-  }
 
   function nextPC() {
     if ($('.token').length > 1){
@@ -64,13 +39,11 @@
   }
 
   function clear(){
-    runSQL('UPDATE init SET score=0');
-    refreshEntries();
+    clearScores(refreshEntries);
   }
 
   function clearAll(){
-    dropTable();
-    createTable();
+    clearPlayers();
     token=1;
     round=1;
     $('#round').text(round);
@@ -104,7 +77,7 @@
         }
         var clickedEntry = $(this).parent();
         var clickedEntryId = clickedEntry.data('entryId');
-        updateInitiative(clickedEntryId, score);
+        updateScore(clickedEntryId, score);
         refreshEntries();
       });
       newEntryRow.find('.delete').click(function(){
@@ -128,13 +101,10 @@
     if (entryIsValid()) {
       var name = $('#name').val();
       var modifier = $('#modifier').val();
-      runSQL('INSERT INTO init (name, modifier, score) VALUES (?, ?, 0);', 
-        [name, modifier],
-        function(){
-          refreshEntries();
-          jQT.goBack();
-        }
-      );
+      addPlayer(name, modifier, function(){
+        refreshEntries();
+        jQT.goBack();
+      });
       $('#name').val("");
       $('#modifier').val("");
   }
@@ -149,9 +119,5 @@
   function deleteEntryById(id){
     runSQL('DELETE FROM init WHERE id=?;', [id], null);
     refreshEntries();
-  }
-
-  function updateInitiative(id, score){
-    runSQL('UPDATE init SET score=? WHERE id = ? ;', [score, id]);
   }
 })();

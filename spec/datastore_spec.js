@@ -1,58 +1,43 @@
 describe('Datastore', function() {
-  var mockDB;
-  beforeEach(function() {
-    if (!mockDB) {
-      mockDB = jasmine.createSpyObj('mock database', ['transaction']);
-      spyOn(global, 'openDatabase').andReturn(mockDB);
-    }
+  afterEach(function() {
+    clearPlayers();
   });
 
-  describe('when fetching the list of players', function() {
-    var players, execFunc, mockTransaction;
-
-    beforeEach(function() {
-      players = [];
-      eachPlayer(function(player) {
-        players.push(player);
-      });
-      mockTransaction = jasmine.createSpyObj('mock transaction', ['executeSql']);
-      _.each(mockDB.transaction.argsForCall, function(args) {
-        execFunc = args[0];
-        execFunc(mockTransaction);
-      });
+  function getPlayers() {
+    var players = [];
+    eachPlayer(function(player) {
+      players.push(player);
     });
+    return players;
+  }
 
-    it('sorts by score and modifier descending', function() {
-      var expectedSql = 'SELECT * FROM init ORDER BY score desc, modifier desc;';
-      expect(mockTransaction.executeSql.argsForCall[1][0]).toEqual(expectedSql);
-    });
+  it('is empty by default', function() {
+    expect(getPlayers()).toEqual([]);
+  });
 
-    it('invokes the callback once for each player', function() {
-      var mockData = [{id:0, name:"Carl", modifier:3, score:19}];
-      var executeSqlCallback = mockTransaction.executeSql.argsForCall[1][2];
-      executeSqlCallback('',{
-        rows: {
-          length: mockData.length, 
-          item: function(i) { return mockData[i]; }
-        }
-      });
+  it('can add a new player to the datastore', function() {
+    addPlayer("Carl", 1);
+    expect(getPlayers()).toEqual([{id: 1, name: "Carl", modifier:1, score:0}]);
+  });
+  
+  it('can update the score for a player', function() {
+    addPlayer("Carl", 1);
+    updateScore(1, 10);
+    expect(getPlayers()[0].score).toEqual(10);
+  });
 
-      expect(players).toEqual(mockData);
-    });
+  it('sorts scores in descending order by score and then by modifier', function() {
+    addPlayer("Carl", 1);
+    updateScore(1, 10);
 
-    it('uses the error handler when running queries', function() {
-      spyOn(global, 'alert');
-      var handler = mockTransaction.executeSql.argsForCall[0][3];
-      var error = {
-        message: "bad",
-        code: 1
-      };
-      expect(handler(1,error)).toBeTruthy();
-      expect(global.alert).toHaveBeenCalledWith("Oops. Error was bad (Code 1)");
-    });
+    addPlayer("Bbraidingttton", -1);
+    updateScore(2, 11);
 
-    it('creates the table if it does not exist', function() {
-      expect(mockTransaction.executeSql.argsForCall[0][0]).toMatch(/^CREATE TABLE IF NOT EXISTS init*./);
-    });
+    addPlayer("Billy", 7);
+    updateScore(3, 10);
+
+    expect(getPlayers()[0].name).toEqual("Bbraidingttton");
+    expect(getPlayers()[1].name).toEqual("Billy");
+    expect(getPlayers()[2].name).toEqual("Carl");
   });
 });
