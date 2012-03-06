@@ -31,6 +31,15 @@ describe('Datastore', function() {
     expect(getPlayers()).toEqual([]);
   });
 
+  it('tracks the current round', function() {
+    var round;
+    setRound(42);
+    withRound(function(r) {
+      round = r;
+    });
+    expect(round).toEqual(42);
+  });
+
   describe('when players are added', function() {
     beforeEach(function() {
       addPlayer("Carl", 1);

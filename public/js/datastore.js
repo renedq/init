@@ -6,7 +6,7 @@
   var connection;
 
   this.eachPlayer = function(callback) {
-    createTable();
+    createPlayerTable();
     runSQL('SELECT * FROM init ORDER BY score desc, modifier desc;', [], 
       function (__, result) {
         for (var i=0; i < result.rows.length; i++){
@@ -18,7 +18,7 @@
   };
 
   this.addPlayer = function(name, modifier, callback) {
-    createTable();
+    createPlayerTable();
     runSQL('INSERT INTO init (name, modifier, score) VALUES (?, ?, 0);', 
        [name, modifier], callback);
   }
@@ -27,8 +27,10 @@
     runSQL('DELETE FROM init WHERE id=?;', [id]);
   }
 
+  // FIXME This needs a new name
   this.clearPlayers = function(){
     runSQL("DROP TABLE IF EXISTS init;");
+    runSQL("DROP TABLE IF EXISTS settings;");
   }
 
   this.clearScores = function(callback) {
@@ -37,6 +39,19 @@
 
   this.updateScore = function(id, score) {
     runSQL('UPDATE init SET score=? WHERE id = ? ;', [score, id]);
+  }
+
+  this.setRound = function(roundNum) {
+    createTable('settings', 
+      '(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
+      'round INTEGER NOT NULL);'); 
+    runSQL('INSERT or REPLACE INTO settings(id, round) VALUES(0,?);', [roundNum]);
+  }
+
+  this.withRound = function(callback) {
+    runSQL('SELECT round FROM settings', [], function(__, result){
+      callback(result.rows.item(0).round);
+    });
   }
 
   function dbConn() {
@@ -53,12 +68,16 @@
     );
   }
 
-  function createTable(){
-    runSQL('CREATE TABLE IF NOT EXISTS init ' +
-            '(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-            'name TEXT NOT NULL, ' + 
-            'modifier INTEGER NOT NULL, ' +
-            'score FLOAT NOT NULL);');
+  function createPlayerTable(){
+    createTable('init', 
+      '(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+      'name TEXT NOT NULL, ' + 
+      'modifier INTEGER NOT NULL, ' +
+      'score FLOAT NOT NULL);');
+  }
+
+  function createTable(tableName, columns){
+    runSQL('CREATE TABLE IF NOT EXISTS ' + tableName + columns);
   }
 
   function errorHandler(__, error) {
