@@ -1,11 +1,16 @@
 describe('Datastore', function() {
+  var ds;
+  beforeEach(function() {
+    ds = datastore;
+  });
+
   afterEach(function() {
-    resetDatastore();
+    ds.resetDatastore();
   });
 
   function getPlayers() {
     var players = [];
-    eachPlayer(function(player) {
+    ds.eachPlayer(function(player) {
       players.push(player);
     });
     return players;
@@ -16,46 +21,46 @@ describe('Datastore', function() {
   });
 
   it('can add a new player to the datastore', function() {
-    addPlayer("Carl", 1);
+    ds.addPlayer("Carl", 1);
     expect(getPlayers()).toEqual([{id: 1, name: "Carl", modifier:1, score:0}]);
   });
   
   it('can update the score for a player', function() {
-    addPlayer("Carl", 1);
-    updateScore(1, 10);
+    ds.addPlayer("Carl", 1);
+    ds.updateScore(1, 10);
     expect(getPlayers()[0].score).toEqual(10);
   });
 
   it('can clear the players even if there arent any', function() {
-    resetDatastore();
+    ds.resetDatastore();
     expect(getPlayers()).toEqual([]);
   });
 
   it('tracks the current round', function() {
     var round;
-    setRound(42);
-    withRound(function(r) {
+    ds.setRound(42);
+    ds.withRound(function(r) {
       round = r;
     });
     expect(round).toEqual(42);
   });
 
   it('is the first round by default', function() {
-    withRound(function(r) {
+    ds.withRound(function(r) {
       expect(r).toEqual(1);
     });
   });
 
   describe('when players are added', function() {
     beforeEach(function() {
-      addPlayer("Carl", 1);
-      updateScore(1, 10);
+      ds.addPlayer("Carl", 1);
+      ds.updateScore(1, 10);
 
-      addPlayer("Bbraidingttton", -1);
-      updateScore(2, 11);
+      ds.addPlayer("Bbraidingttton", -1);
+      ds.updateScore(2, 11);
 
-      addPlayer("Billy", 7);
-      updateScore(3, 10);
+      ds.addPlayer("Billy", 7);
+      ds.updateScore(3, 10);
     });
 
     it('sorts scores in descending order by score and then by modifier', function() {
@@ -65,13 +70,13 @@ describe('Datastore', function() {
     });
 
     it('can clear all the players scores', function() {
-      clearScores();
+      ds.clearScores();
       var scores = _.pluck(getPlayers(),'score');
       expect(scores).toEqual([0, 0, 0]);
     });
 
     it('can delete a single player', function() {
-      deletePlayer(1);
+      ds.deletePlayer(1);
       expect(getPlayers().length).toEqual(2);
     });
   });

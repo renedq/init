@@ -4,8 +4,18 @@
   var displayName = 'init';
   var maxSize = 65536;
   var connection;
+  this.datastore = {
+    eachPlayer: eachPlayer,
+    addPlayer: addPlayer,
+    deletePlayer: deletePlayer,
+    resetDatastore: resetDatastore,
+    clearScores: clearScores,
+    updateScore: updateScore,
+    setRound: setRound,
+    withRound: withRound
+  };
 
-  this.eachPlayer = function(callback) {
+  function eachPlayer(callback) {
     runSQL('SELECT * FROM init ORDER BY score desc, modifier desc;', [], 
       function (__, result) {
         for (var i=0; i < result.rows.length; i++){
@@ -16,35 +26,35 @@
     );
   };
 
-  this.addPlayer = function(name, modifier, callback) {
+  function addPlayer(name, modifier, callback) {
     runSQL('INSERT INTO init (name, modifier, score) VALUES (?, ?, 0);', 
        [name, modifier], callback);
   }
   
-  this.deletePlayer = function(id) {
+  function deletePlayer(id) {
     runSQL('DELETE FROM init WHERE id=?;', [id]);
   }
 
-  this.resetDatastore = function(){
+  function resetDatastore(){
     runSQL("DROP TABLE IF EXISTS init;");
     runSQL("DROP TABLE IF EXISTS settings;");
     createAllTables();
     setRound(1);
   }
 
-  this.clearScores = function(callback) {
+  function clearScores(callback) {
     runSQL('UPDATE init SET score=0', [], callback);
   };
 
-  this.updateScore = function(id, score) {
+  function updateScore(id, score) {
     runSQL('UPDATE init SET score=? WHERE id = ? ;', [score, id]);
   }
 
-  this.setRound = function(roundNum) {
+  function setRound(roundNum) {
     runSQL('INSERT or REPLACE INTO settings(id, round) VALUES(0,?);', [roundNum]);
   }
 
-  this.withRound = function(callback) {
+  function withRound(callback) {
     runSQL('SELECT round FROM settings', [], function(__, result){
       callback(result.rows.item(0).round);
     });

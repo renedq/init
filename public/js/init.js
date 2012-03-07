@@ -1,6 +1,5 @@
 (function() {
   var token=0;
-  var round=1; // FIXME Die die die
   var jQT = $.jQTouch({
     icon: 'kilo.png',
     statusBar: 'black'
@@ -9,18 +8,25 @@
   $(document).ready(function(){
     $('#createEntry form').submit(createEntry);
     refreshEntries();
+    datastore.withRound(setRound);
   });
 
   function nextPC() {
     if ($('.token').length > 1){
       if (token >= ($('.token').length - 1)){
         setInitToken(1);
-        round++;
-        $('#round').text(round);
+        datastore.withRound(function(r) {
+          setRound(r+1);
+        });
       } else {
         setInitToken(token + 1);
       }
     }
+  }
+
+  function setRound(round){
+    datastore.setRound(round);
+    $('#round').text(round);
   }
 
   function setInitToken(newValue) {
@@ -30,21 +36,20 @@
   }
 
   function resetInitiative() {
-    round=1;
+    setRound(1);
     token=0;
     $('#home img.token').attr("src","images/token_blank.png");
-    $('#round').text(round);
   }
 
   function clear(){
-    clearScores(refreshEntries);
+    datastore.clearScores(refreshEntries);
+    setRound(1);
   }
 
   function clearAll(){
-    resetDatastore();
+    datastore.resetDatastore();
     token=1;
-    round=1;
-    $('#round').text(round);
+    setRound(1);
     refreshEntries();
   }
 
@@ -54,7 +59,7 @@
     $('#reset').click(resetInitiative);
     $('#clear').click(clear);
     $('#clearAll').click(clearAll);
-    eachPlayer(function(row) {
+    datastore.eachPlayer(function(row) {
       var newEntryRow = $('#entryTemplate').clone();
       newEntryRow.removeAttr('id');
       newEntryRow.removeAttr('style');
@@ -75,13 +80,13 @@
         }
         var clickedEntry = $(this).parent();
         var clickedEntryId = clickedEntry.data('entryId');
-        updateScore(clickedEntryId, score);
+        datastore.updateScore(clickedEntryId, score);
         refreshEntries();
       });
       newEntryRow.find('.delete').click(function(){
         var clickedEntry = $(this).parent();
         var clickedEntryId = clickedEntry.data('entryId');
-        deletePlayer(clickedEntryId);
+        datastore.deletePlayer(clickedEntryId);
         refreshEntries();
         clickedEntry.slideUp();
       });
@@ -100,7 +105,7 @@
     if (entryIsValid()) {
       var name = $('#name').val();
       var modifier = $('#modifier').val();
-      addPlayer(name, modifier, function(){
+      datastore.addPlayer(name, modifier, function(){
         refreshEntries();
         jQT.goBack();
       });
@@ -108,10 +113,5 @@
       $('#modifier').val("");
   }
     return false;
-  }
-
-  function errorHandler(transaction, error) {
-    alert('Oops. Error was '+error.message+' (Code '+error.code+')');
-    return true;
   }
 })();
