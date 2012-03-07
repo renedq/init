@@ -8,14 +8,16 @@
   $(document).ready(function(){
     $('#createEntry form').submit(createEntry);
     refreshEntries();
-    datastore.withRound(setRound);
+    datastore.withValue('round', function(round) {
+      datastore.setValue('round', round || 1);
+    });
   });
 
   function nextPC() {
     if ($('.token').length > 1){
       if (token >= ($('.token').length - 1)){
         setInitToken(1);
-        datastore.withRound(function(r) {
+        datastore.withValue('round',function(r) {
           setRound(r+1);
         });
       } else {
@@ -25,7 +27,7 @@
   }
 
   function setRound(round){
-    datastore.setRound(round);
+    datastore.setValue('round',round);
     $('#round').text(round);
   }
 

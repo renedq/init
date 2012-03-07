@@ -1,6 +1,6 @@
 (function() {
-  var shortName = 'init';
-  var version = '1.01';
+  var shortName = 'init-02';
+  var version = '1.02';
   var displayName = 'init';
   var maxSize = 65536;
   var connection;
@@ -11,8 +11,8 @@
     resetDatastore: resetDatastore,
     clearScores: clearScores,
     updateScore: updateScore,
-    setRound: setRound,
-    withRound: withRound
+    setValue: setValue,
+    withValue: withValue
   };
 
   function eachPlayer(callback) {
@@ -39,7 +39,6 @@
     runSQL("DROP TABLE IF EXISTS init;");
     runSQL("DROP TABLE IF EXISTS settings;");
     createAllTables();
-    setRound(1);
   }
 
   function clearScores(callback) {
@@ -50,13 +49,17 @@
     runSQL('UPDATE init SET score=? WHERE id = ? ;', [score, id]);
   }
 
-  function setRound(roundNum) {
-    runSQL('INSERT or REPLACE INTO settings(id, round) VALUES(0,?);', [roundNum]);
+  function setValue(name, value) {
+    runSQL('INSERT or REPLACE INTO settings(name, value) VALUES(?,?);', [name,value]);
   }
 
-  function withRound(callback) {
-    runSQL('SELECT round FROM settings', [], function(__, result){
-      callback(result.rows.item(0).round);
+  function withValue(name, callback) {
+    runSQL('SELECT value FROM settings WHERE name=?', [name], function(__, result){
+      if (result.rows.length == 0){
+        callback(undefined);
+      } else {
+        callback(result.rows.item(0).value);
+      }
     });
   }
 
@@ -78,8 +81,8 @@
 
   function createAllTables() {
     createTable('settings', 
-      '(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,' +
-      'round INTEGER NOT NULL);'); 
+      '(name TEXT NOT NULL PRIMARY KEY, ' + 
+      'value INTEGER NOT NULL);'); 
     createTable('init', 
       '(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
       'name TEXT NOT NULL, ' + 

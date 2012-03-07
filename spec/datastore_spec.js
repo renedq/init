@@ -36,18 +36,18 @@ describe('Datastore', function() {
     expect(getPlayers()).toEqual([]);
   });
 
-  it('tracks the current round', function() {
-    var round;
-    ds.setRound(42);
-    ds.withRound(function(r) {
-      round = r;
+  it('can store key value pairs', function() {
+    var mySetting;
+    ds.setValue("mySetting",42);
+    ds.withValue("mySetting", function(v) {
+      mySetting = v;
     });
-    expect(round).toEqual(42);
+    expect(mySetting).toEqual(42);
   });
 
-  it('is the first round by default', function() {
-    ds.withRound(function(r) {
-      expect(r).toEqual(1);
+  it('values are undefined by default', function() {
+    ds.withValue("not a setting", function(v) {
+      expect(v).toBeUndefined();
     });
   });
 
