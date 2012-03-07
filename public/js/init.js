@@ -1,19 +1,47 @@
 (function() {
+  this.controller = {
+    nextPC: nextPC,
+    nextRound: nextRound
+  }
+
+  function nextPC() {
+    datastore.playerCount(function(playerCount) {
+      if (playerCount > 0){
+        datastore.withValue('token', function(currentPlayer){
+          if (playerCount!=currentPlayer){
+            datastore.setValue('token', currentPlayer+1);
+          } else {
+            datastore.setValue('token', 1);
+          }
+        });
+      }
+    });
+  }
+
+  function nextRound(){
+
+  }
+})();
+
+(function() {
   var jQT = $.jQTouch({
     icon: 'kilo.png',
     statusBar: 'black'
   });
 
   $(document).ready(function(){
-    $('#createEntry form').submit(createEntry);
+    $('#createEntry form').submit(newPlayerSubmitted);
     refreshEntries();
-    datastore.withValue('round', function(round) {
-      datastore.setValue('round', round || 1);
-    });
-    datastore.withValue('token', function(token) {
-      datastore.setValue('token', token || 0);
-    });
+
+    setDefaultValue('round', 1);
+    setDefaultValue('token', 0);
   });
+
+  function setDefaultValue(name, value) {
+    datastore.withValue(name, function(v) {
+      datastore.setValue(name, v || value);
+    });
+  }
 
   function nextPC() {
     if ($('.token').length > 1){
@@ -32,7 +60,7 @@
 
   function setRound(round){
     datastore.setValue('round',round);
-    $('#round').text(round);
+    view.setRound(round);
   }
 
   function setInitToken(newValue) {
@@ -44,7 +72,7 @@
   function resetInitiative() {
     setRound(1);
     datastore.setValue('token', 0);
-    $('#home img.token').attr("src","images/token_blank.png");
+    view.clearCurrentToken();
   }
 
   function clear(){
@@ -105,21 +133,18 @@
     return (value - 0) == value && value.length > 0;
   }
 
-  function entryIsValid() {
-    return $('#newpc').valid();
+  function newPlayerSubmitted() {
+    if (view.entryIsValid()) {
+      var name = view.newPlayerName();
+      var modifier = view.newPlayerModifier(); 
+      datastore.addPlayer(name, modifier, playerAdded);
+    }
+    return false;
   }
 
-  function createEntry() {
-    if (entryIsValid()) {
-      var name = $('#name').val();
-      var modifier = $('#modifier').val();
-      datastore.addPlayer(name, modifier, function(){
-        refreshEntries();
-        jQT.goBack();
-      });
-      $('#name').val("");
-      $('#modifier').val("");
-  }
-    return false;
+  function playerAdded() {
+    view.resetNewPlayerForm();
+    refreshEntries();
+    jQT.goBack();
   }
 })();

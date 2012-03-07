@@ -1,7 +1,11 @@
 (function() {
   this.view = {
     clearCurrentToken: clearCurrentToken,
-    setRound: setRound
+    setRound: setRound,
+    newPlayerName: newPlayerName,
+    newPlayerModifier: newPlayerModifier,
+    resetNewPlayerForm: resetNewPlayerForm,
+    entryIsValid: entryIsValid
   };
 
   function clearCurrentToken() {
@@ -10,5 +14,22 @@
 
   function setRound(round){
     $('#round').text(round);
+  }
+
+  function newPlayerName() {
+    return $('#name').val();
+  }
+
+  function newPlayerModifier() {
+    return $('#modifier').val(); 
+  }
+  
+  function resetNewPlayerForm() {
+    $('#name').val("");
+    $('#modifier').val("");
+  }
+
+  function entryIsValid() {
+    return $('#newpc').valid();
   }
 })();

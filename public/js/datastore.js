@@ -12,7 +12,8 @@
     clearScores: clearScores,
     updateScore: updateScore,
     setValue: setValue,
-    withValue: withValue
+    withValue: withValue,
+    playerCount: function() {}
   };
 
   function eachPlayer(callback) {
