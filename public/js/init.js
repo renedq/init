@@ -1,5 +1,4 @@
 (function() {
-  var token=0;
   var jQT = $.jQTouch({
     icon: 'kilo.png',
     statusBar: 'black'
@@ -11,18 +10,23 @@
     datastore.withValue('round', function(round) {
       datastore.setValue('round', round || 1);
     });
+    datastore.withValue('token', function(token) {
+      datastore.setValue('token', token || 0);
+    });
   });
 
   function nextPC() {
     if ($('.token').length > 1){
-      if (token >= ($('.token').length - 1)){
-        setInitToken(1);
-        datastore.withValue('round',function(r) {
-          setRound(r+1);
-        });
-      } else {
-        setInitToken(token + 1);
-      }
+      datastore.withValue('token', function(token) {
+        if (token >= ($('.token').length - 1)){
+          setInitToken(1);
+          datastore.withValue('round',function(r) {
+            setRound(r+1);
+          });
+        } else {
+          setInitToken(token + 1);
+        }
+      });
     }
   }
 
@@ -31,26 +35,32 @@
     $('#round').text(round);
   }
 
-  function setInitToken(newValue) {
+  function clearCurrentToken() {
     $('#home img.token').attr("src","images/token_blank.png");
-    token = newValue;
-    $($('#home img.token').get(token)).attr("src","images/token.jpg");
+  }
+
+  function setInitToken(newValue) {
+    clearCurrentToken();
+    datastore.setValue('token', newValue);
+    $($('#home img.token').get(newValue)).attr("src","images/token.jpg");
   }
 
   function resetInitiative() {
     setRound(1);
-    token=0;
+    datastore.setValue('token', 0);
     $('#home img.token').attr("src","images/token_blank.png");
   }
 
   function clear(){
     datastore.clearScores(refreshEntries);
+    datastore.setValue('token', 0);
+    clearCurrentToken();
     setRound(1);
   }
 
   function clearAll(){
     datastore.resetDatastore();
-    token=1;
+    setInitToken(1);
     setRound(1);
     refreshEntries();
   }
