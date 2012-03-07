@@ -43,6 +43,10 @@ global.openDatabase = function(shortName, version, displayName, maxSize) {
   return sqlitedb.openDatabaseSync("testdbs/" + shortName + version + displayName + ".db");
 }
 
+jasmine.getEnv().beforeEach(function(){
+   $('body').empty();
+});
+
 loadScripts('', false);
 
 _.extend(exports, global);

@@ -35,12 +35,8 @@
     $('#round').text(round);
   }
 
-  function clearCurrentToken() {
-    $('#home img.token').attr("src","images/token_blank.png");
-  }
-
   function setInitToken(newValue) {
-    clearCurrentToken();
+    view.clearCurrentToken();
     datastore.setValue('token', newValue);
     $($('#home img.token').get(newValue)).attr("src","images/token.jpg");
   }
@@ -54,7 +50,7 @@
   function clear(){
     datastore.clearScores(refreshEntries);
     datastore.setValue('token', 0);
-    clearCurrentToken();
+    view.clearCurrentToken();
     setRound(1);
   }
 
