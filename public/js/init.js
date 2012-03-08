@@ -4,27 +4,35 @@
     nextRound: nextRound
   }
 
+  // FIXME Rename token to currentPlayer
   function nextPC() {
     datastore.playerCount(function(playerCount) {
       if (playerCount > 0){
-        incrementValue('token', playerCount, nextRound);
+        incrementValue('token', playerCount, function(currentPlayer){
+          //setInitToken(currentPlayer); FIXME
+          if (currentPlayer > playerCount) { nextRound(); }
+        });
       }
     });
   }
 
   function nextRound(){
     incrementValue('round');
+    setInitToken(1);
   }
 
   function incrementValue(name, max, callback) {
     datastore.withValue(name, function(value){
       value++;
-      if (value > max) { 
-        value = 1;
-        callback(); 
-      }
       datastore.setValue(name, value);
+      if (callback) {callback(value);}
     });
+  }
+
+  function setInitToken(newValue) {
+    view.clearCurrentToken();
+    datastore.setValue('token', newValue);
+    $($('#home img.token').get(newValue)).attr("src","images/token.jpg");
   }
 })();
 
@@ -142,7 +150,8 @@
     if (view.entryIsValid()) {
       var name = view.newPlayerName();
       var modifier = view.newPlayerModifier(); 
-      datastore.addPlayer(name, modifier, playerAdded);
+      datastore.addPlayer(name, modifier);
+      playerAdded();
     }
     return false;
   }

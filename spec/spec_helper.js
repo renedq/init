@@ -39,6 +39,7 @@ function loadScripts(dir, recurse) {
 }
 fs.mkdir("testdbs", 0777);
 global.alert = function() {console.log.apply(this, arguments);};
+global.localStorage = jasmine.createSpyObj('local storage', ['setItem', 'getItem']);
 global.openDatabase = function(shortName, version, displayName, maxSize) {
   return sqlitedb.openDatabaseSync("testdbs/" + shortName + version + displayName + ".db");
 }
