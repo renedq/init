@@ -1,12 +1,16 @@
 describe('Init app', function() {
-  var playerCount, token = 0;
+  var playerCount = 0;
+  var fakeStorage = {
+    token: 0,
+    round: 1
+  };
 
   beforeEach(function() {
     spyOn(datastore, 'playerCount').andCallFake(function(callback) {
       callback(playerCount);
     });
     spyOn(datastore, 'withValue').andCallFake(function(key, callback) {
-      callback(token);
+      callback(fakeStorage[key]);
     });
   });
 
@@ -28,14 +32,14 @@ describe('Init app', function() {
     });
 
     it('loops back to the beginning once we reach the bottom of the order', function() {
-      token = 2;
+      fakeStorage.token = 2;
       controller.nextPC();
       expect(datastore.setValue).toHaveBeenCalledWith('token', 1);
     });
 
     it('it increments the round when looping back to the top of the order', function() {
-      pending();
-      token = 2;
+      playerCount = 6;
+      fakeStorage.token = 6;
       controller.nextPC();
       expect(datastore.setValue).toHaveBeenCalledWith('round', 2);
     });

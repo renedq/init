@@ -7,19 +7,24 @@
   function nextPC() {
     datastore.playerCount(function(playerCount) {
       if (playerCount > 0){
-        datastore.withValue('token', function(currentPlayer){
-          if (playerCount!=currentPlayer){
-            datastore.setValue('token', currentPlayer+1);
-          } else {
-            datastore.setValue('token', 1);
-          }
-        });
+        incrementValue('token', playerCount, nextRound);
       }
     });
   }
 
   function nextRound(){
+    incrementValue('round');
+  }
 
+  function incrementValue(name, max, callback) {
+    datastore.withValue(name, function(value){
+      value++;
+      if (value > max) { 
+        value = 1;
+        callback(); 
+      }
+      datastore.setValue(name, value);
+    });
   }
 })();
 
