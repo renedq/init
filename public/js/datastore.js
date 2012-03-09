@@ -7,9 +7,9 @@
     clearScores: clearScores,
     updateScore: updateScore,
     setValue: setValue,
+    getValue: getValue,
     withValue: withValue,
-    getPlayers: getPlayers,
-    playerCount: function() {}
+    getPlayers: getPlayers
   };
 
   function eachPlayer(callback) {
@@ -48,14 +48,17 @@
   }
 
   function setValue(name, value) {
-    var settings = fetch('settings', '{}');
+    var settings = getSettings();
     settings[name] = value;
     store('settings', settings);
   }
 
+  function getValue (name) {
+    return getSettings()[name];
+  }
+
   function withValue(name, callback) {
-    var settings = fetch('settings', '{}');
-    callback(settings[name]);
+    callback(getSettings()[name]);
   }
 
   function fetch(key, defaultValue) {
@@ -67,7 +70,25 @@
   }
 
   function getPlayers() {
-    return fetch('players', "[]");
+    return fetch('players', "[]").sort(comparePlayers);
+  }
+
+  function comparePlayers(a, b){
+    if (Number(a.score) > Number(b.score)){
+      return -1;
+    } else if (Number(a.score) < Number(b.score)) {
+      return 1;
+    } else {
+      if (Number(a.modifier) < Number(b.modifier)){
+        return 1;
+      } else {
+        return -1;
+      }
+    }
+  }
+
+  function getSettings() {
+    return fetch('settings', '{}');
   }
 
   function mapPlayers(callback) {

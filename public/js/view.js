@@ -1,10 +1,11 @@
 (function() {
   this.view = {
-    clearCurrentToken: clearCurrentToken,
+    clearCurrentToken: clearCurrentToken, // FIXME Why is this public? Does it need to be?
     setRound: setRound,
     newPlayerName: newPlayerName,
     newPlayerModifier: newPlayerModifier,
     resetNewPlayerForm: resetNewPlayerForm,
+    setInitToken: setInitToken,
     entryIsValid: entryIsValid
   };
 
@@ -22,6 +23,11 @@
 
   function newPlayerModifier() {
     return $('#modifier').val(); 
+  }
+
+  function setInitToken(newValue) {
+    view.clearCurrentToken();
+    $($('#home img.token').get(newValue)).attr("src","images/token.jpg");
   }
   
   function resetNewPlayerForm() {

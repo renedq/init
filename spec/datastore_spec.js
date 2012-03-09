@@ -1,18 +1,7 @@
 describe('Datastore', function() {
   var ds;
-  var fakeStorage = {};
   beforeEach(function() {
     ds = datastore;
-
-    localStorage.getItem.andCallFake(function(key) {
-      return fakeStorage[key];
-    });
-    localStorage.setItem.andCallFake(function(key, value) {
-      fakeStorage[key] = value;
-    });
-  });
-
-  afterEach(function() {
     ds.resetDatastore();
   });
 
@@ -45,7 +34,7 @@ describe('Datastore', function() {
     expect(mySetting).toEqual(42);
   });
 
-  it('values are undefined by default', function() {
+  xit('values are undefined by default', function() {
     ds.withValue("not a setting", function(v) {
       expect(v).toBeUndefined();
     });
@@ -63,13 +52,6 @@ describe('Datastore', function() {
       ds.updateScore(3, 10);
     });
 
-    it('sorts scores in descending order by score and then by modifier', function() {
-      pending();
-      expect(getPlayers()[0].name).toEqual("Bbraidingttton");
-      expect(getPlayers()[1].name).toEqual("Billy");
-      expect(getPlayers()[2].name).toEqual("Carl");
-    });
-
     it('can clear all the players scores', function() {
       ds.clearScores();
       var scores = _.pluck(ds.getPlayers(),'score');
@@ -79,6 +61,12 @@ describe('Datastore', function() {
     it('can delete a single player', function() {
       ds.deletePlayer(1);
       expect(ds.getPlayers().length).toEqual(2);
+    });
+    
+    it('sorts scores in descending order by score and then by modifier', function() {
+      expect(ds.getPlayers()[0].name).toEqual("Bbraidingttton");
+      expect(ds.getPlayers()[1].name).toEqual("Billy");
+      expect(ds.getPlayers()[2].name).toEqual("Carl");
     });
   });
 });

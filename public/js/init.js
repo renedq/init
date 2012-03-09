@@ -1,42 +1,4 @@
 (function() {
-  this.controller = {
-    nextPC: nextPC,
-    nextRound: nextRound
-  }
-
-  // FIXME Rename token to currentPlayer
-  function nextPC() {
-    datastore.playerCount(function(playerCount) {
-      if (playerCount > 0){
-        incrementValue('token', playerCount, function(currentPlayer){
-          //setInitToken(currentPlayer); FIXME
-          if (currentPlayer > playerCount) { nextRound(); }
-        });
-      }
-    });
-  }
-
-  function nextRound(){
-    incrementValue('round');
-    setInitToken(1);
-  }
-
-  function incrementValue(name, max, callback) {
-    datastore.withValue(name, function(value){
-      value++;
-      datastore.setValue(name, value);
-      if (callback) {callback(value);}
-    });
-  }
-
-  function setInitToken(newValue) {
-    view.clearCurrentToken();
-    datastore.setValue('token', newValue);
-    $($('#home img.token').get(newValue)).attr("src","images/token.jpg");
-  }
-})();
-
-(function() {
   var jQT = $.jQTouch({
     icon: 'kilo.png',
     statusBar: 'black'
@@ -58,6 +20,7 @@
 
   function nextPC() {
     if ($('.token').length > 1){
+      token = datastore.getValue('token');
       datastore.withValue('token', function(token) {
         if (token >= ($('.token').length - 1)){
           setInitToken(1);
