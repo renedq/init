@@ -68,5 +68,10 @@ describe('Datastore', function() {
       expect(ds.getPlayers()[1].name).toEqual("Billy");
       expect(ds.getPlayers()[2].name).toEqual("Carl");
     });
+
+    it('sorts a new player at the bottom', function() {
+      ds.addPlayer("Herro", 6);
+      expect(ds.getPlayers()[3].name).toEqual("Herro");
+    });
   });
 });

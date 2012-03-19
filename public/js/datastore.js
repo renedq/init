@@ -21,6 +21,7 @@
   function addPlayer(name, modifier, callback) {
     var players = getPlayers();
     players.push({id: players.length + 1, name: name, modifier: modifier, score: 0});
+    setValue('currentPlayer', 0);    
     store('players', players);
   }
   

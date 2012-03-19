@@ -8,15 +8,16 @@
     var playerCount = datastore.getPlayers().length;
     if (playerCount > 0){
       incrementValue('currentPlayer', playerCount, function(currentPlayer){
-        // view.setInitToken(currentPlayer); 
-        if (currentPlayer > playerCount) { nextRound(); }
+        view.setInitToken(currentPlayer); 
+        if (currentPlayer >= playerCount) { nextRound(); }
       });
     }
   }
 
   function nextRound(){
     incrementValue('round');
-    datastore.setValue('currentPlayer', 1);
+    view.setRound(datastore.getValue('round'));
+    datastore.setValue('currentPlayer', 0);
   }
 
   function incrementValue(name, max, callback) {

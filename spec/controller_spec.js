@@ -14,6 +14,8 @@ describe('Init app', function() {
     beforeEach(function() {
       datastore.addPlayer("Carl", 1);
       datastore.addPlayer("Billy", 2);
+      datastore.addPlayer("Herro", 3);
+      datastore.addPlayer("RaeKwon", 4);
     });
     
     it('allows the user to move to the first player in initative order', function() {
@@ -21,18 +23,24 @@ describe('Init app', function() {
       expect(datastore.getValue('currentPlayer')).toEqual(1);
     });
     
-    it('', function() {
-      expect().toEqual();
-    });
-
     it('loops back to the beginning once we reach the bottom of the order', function() {
-      _.times(3, controller.nextPC);
+      _.times(5, controller.nextPC);
       expect(datastore.getValue('currentPlayer')).toEqual(1);
     });
 
     it('it increments the round when looping back to the top of the order', function() {
-      _.times(3, controller.nextPC);
+      _.times(5, controller.nextPC);
       expect(datastore.getValue('round')).toEqual(2);
+    });
+
+    it('resets the round when a player is added to the player list', function() {
+      _.times(2, controller.nextPC);
+      expect(datastore.getValue('currentPlayer')).toEqual(2);
+      datastore.addPlayer("Lagan",3);
+      expect(datastore.getValue('currentPlayer')).toEqual(0);
+      _.times(2, controller.nextPC);
+      expect(datastore.getValue('currentPlayer')).toEqual(2);
+      expect(datastore.getPlayers()[0].name).toEqual("RaeKwon");
     });
   });
 });

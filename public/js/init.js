@@ -18,22 +18,6 @@
     });
   }
 
-  function nextPC() {
-    if ($('.token').length > 1){
-      token = datastore.getValue('token');
-      datastore.withValue('token', function(token) {
-        if (token >= ($('.token').length - 1)){
-          setInitToken(1);
-          datastore.withValue('round',function(r) {
-            setRound(r+1);
-          });
-        } else {
-          setInitToken(token + 1);
-        }
-      });
-    }
-  }
-
   function setRound(round){
     datastore.setValue('round',round);
     view.setRound(round);
@@ -47,7 +31,7 @@
 
   function resetInitiative() {
     setRound(1);
-    datastore.setValue('token', 0);
+    datastore.setValue('currentPlayer', 0);
     view.clearCurrentToken();
   }
 
@@ -56,6 +40,7 @@
     datastore.setValue('token', 0);
     view.clearCurrentToken();
     setRound(1);
+    refreshEntries();//FIXME should this be here?
   }
 
   function clearAll(){
@@ -67,7 +52,7 @@
 
   function refreshEntries() {
     $('#body-list li:gt(0)').remove();
-    $('#next').click(nextPC);
+    $('#next').click(controller.nextPC);
     $('#reset').click(resetInitiative);
     $('#clear').click(clear);
     $('#clearAll').click(clearAll);
