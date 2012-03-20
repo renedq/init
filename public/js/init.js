@@ -5,6 +5,7 @@
   });
 
   $(document).ready(function(){
+//    window.addEventListener("load", function() { setTimeout (function() { window.scrollTo(0,1);}, 0); });
     $('#createEntry form').submit(newPlayerSubmitted);
     if (datastore.getValue('currentPlayer') == null){ datastore.setValue('currentPlayer', 0);}
     if (datastore.getValue('round') == null) { datastore.setValue('round', 1);}
