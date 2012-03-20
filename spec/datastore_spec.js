@@ -7,6 +7,7 @@ describe('Datastore', function() {
 
   it('is empty by default', function() {
     expect(ds.getPlayers()).toEqual([]);
+    expect(ds.getValue('nextID')).toEqual(1);
   });
 
   it('can add a new player to the datastore', function() {
@@ -34,7 +35,7 @@ describe('Datastore', function() {
     expect(mySetting).toEqual(42);
   });
 
-  xit('values are undefined by default', function() {
+  it('values are undefined by default', function() {
     ds.withValue("not a setting", function(v) {
       expect(v).toBeUndefined();
     });
@@ -50,6 +51,10 @@ describe('Datastore', function() {
 
       ds.addPlayer("Billy", 7);
       ds.updateScore(3, 10);
+    });
+  
+    it('the nextID will be incremented', function() {
+      expect(ds.getValue('nextID')).toEqual(4);
     });
 
     it('can clear all the players scores', function() {

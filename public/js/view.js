@@ -28,7 +28,6 @@
   function setInitToken(newValue) {
     view.clearCurrentPlayer();
     $($('#home img.token').get(newValue)).attr("src","images/token.jpg");
-    console.log("New currentPlayer in init: " + newValue);
   }
   
   function resetNewPlayerForm() {

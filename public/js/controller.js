@@ -8,13 +8,11 @@
     var playerCount = datastore.getPlayers().length;
     if (playerCount > 0){
       incrementValue('currentPlayer', playerCount, function(currentPlayer){
-        console.log("Old currentPlayer nextPC: " + datastore.getValue('currentPlayer'));
+        console.log(datastore.getPlayers());
         view.setInitToken(currentPlayer); 
         if (currentPlayer > playerCount) { nextRound(); }
       });
     }
-    console.log("New currentPlayer nextPC: " + datastore.getValue('currentPlayer'));
-    console.log("Round nextPC: " + datastore.getValue('round'));
   }
 
   function nextRound(){
@@ -26,17 +24,9 @@
 
   function incrementValue(name, max, callback) {
     datastore.withValue(name, function(value){
-      console.log("Incrementing incrementValue: " + name);
       value++;
       datastore.setValue(name, value);
       if (callback) {callback(value);}
     });
   }
-
-  // FIXME Move to view
-  /*function setInitToken(newValue) {
-    view.clearCurrentToken();
-    $($('#home img.token').get(newValue)).attr("src","images/token.jpg");
-    console.log("New token: " + newValue);
-  }*/
 })();

@@ -20,17 +20,27 @@
 
   function addPlayer(name, modifier, callback) {
     var players = getPlayers();
-    players.push({id: players.length + 1, name: name, modifier: modifier, score: 0});
+    var playerID = getValue('nextID');
+    //if (playerID == null){ playerID = 1; }
+    players.push({id: playerID, name: name, modifier: modifier, score: 0});
     setValue('currentPlayer', 0);    
+    setValue('nextID', playerID + 1); 
     store('players', players);
   }
   
   function deletePlayer(id) {
+    console.log("Old Players:");
+    console.log(getPlayers());
     var players = _.reject(getPlayers(), function (player){return player.id == id} );
+    //FIXME need to change currentPlayer if player <= currentPlayer
+    console.log("New Players:");
+    setValue('currentPlayer', 1);
     store('players', players);
+    console.log(getPlayers());
   }
 
   function resetDatastore(){
+    setValue('nextID', 1);
     store('players', []);
   }
 

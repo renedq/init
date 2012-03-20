@@ -6,18 +6,10 @@
 
   $(document).ready(function(){
     $('#createEntry form').submit(newPlayerSubmitted);
-    setDefaultValue('currentPlayer', 1);
-    setDefaultValue('round', 1);
+    datastore.setValue('currentPlayer', 0);
+    datastore.setValue('round', 1);
     refreshEntries();
-//    view.setCurrentPlayer(1);
   });
-
-  function setDefaultValue(name, value) {
-    datastore.withValue(name, function(v) {
-      console.log(name + ": " + value);
-      datastore.setValue(name, v || value);
-    });
-  }
 
   function setRound(round){
     datastore.setValue('round',round);
@@ -39,14 +31,14 @@
   function clear(){
     datastore.clearScores(refreshEntries);
     datastore.setValue('token', 0);
-    view.clearCurrentToken();
+    view.clearCurrentPlayer();
     setRound(1);
     refreshEntries();//FIXME should this be here?
   }
 
   function clearAll(){
     datastore.resetDatastore();
-    setInitToken(1);
+    setCurrentPlayer(1);
     setRound(1);
     refreshEntries();
   }
@@ -85,9 +77,7 @@
         var clickedEntry = $(this).parent();
         var clickedEntryId = clickedEntry.data('entryId');
         datastore.deletePlayer(clickedEntryId);
-        //$(this).parent().slideUp();
         //$(this).parent().animate({ width: '0px'}, {duration: 500, complete: function() {$(this).remove();}});
-        //refreshEntries();
         clickedEntry.slideUp();
       });
     });
