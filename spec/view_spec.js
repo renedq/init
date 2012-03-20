@@ -6,7 +6,7 @@ describe('View', function() {
     $('body').
       append($('<div id="home">').
         append($('<img class="token">')));
-    view.clearCurrentToken();
+    view.clearCurrentPlayer();
     expect($('#home img.token').attr('src')).toEqual('images/token_blank.png');
   });
 

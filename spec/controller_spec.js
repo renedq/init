@@ -1,13 +1,13 @@
 describe('Init app', function() {
   beforeEach(function() {
     datastore.resetDatastore();
-    datastore.setValue('currentPlayer', 0);
+    datastore.setValue('currentPlayer', 1);
     datastore.setValue('round', 1);
   });
 
   it('will not increment currentPlayer if there are no PCs', function() {
     controller.nextPC();
-    expect(datastore.getValue('currentPlayer')).toEqual(0);
+    expect(datastore.getValue('currentPlayer')).toEqual(1);
   });
   
   describe('when there are players', function() {
@@ -31,6 +31,11 @@ describe('Init app', function() {
     it('it increments the round when looping back to the top of the order', function() {
       _.times(5, controller.nextPC);
       expect(datastore.getValue('round')).toEqual(2);
+    });
+
+    it('it doesnt increment the round until after the last player in the order has a turn', function() {
+      _.times(datastore.getPlayers().length, controller.nextPC);
+      expect(datastore.getValue('round')).toEqual(1);
     });
 
     it('resets the round when a player is added to the player list', function() {

@@ -6,14 +6,15 @@
 
   $(document).ready(function(){
     $('#createEntry form').submit(newPlayerSubmitted);
-    refreshEntries();
-
+    setDefaultValue('currentPlayer', 1);
     setDefaultValue('round', 1);
-    setDefaultValue('token', 0);
+    refreshEntries();
+//    view.setCurrentPlayer(1);
   });
 
   function setDefaultValue(name, value) {
     datastore.withValue(name, function(v) {
+      console.log(name + ": " + value);
       datastore.setValue(name, v || value);
     });
   }
@@ -23,16 +24,16 @@
     view.setRound(round);
   }
 
-  function setInitToken(newValue) {
-    view.clearCurrentToken();
-    datastore.setValue('token', newValue);
+  function setCurrentPlayer(newValue) {
+    view.clearCurrentPlayer();
+    datastore.setValue('currentPlayer', newValue);
     $($('#home img.token').get(newValue)).attr("src","images/token.jpg");
   }
 
   function resetInitiative() {
     setRound(1);
     datastore.setValue('currentPlayer', 0);
-    view.clearCurrentToken();
+    view.clearCurrentPlayer();
   }
 
   function clear(){
@@ -84,7 +85,9 @@
         var clickedEntry = $(this).parent();
         var clickedEntryId = clickedEntry.data('entryId');
         datastore.deletePlayer(clickedEntryId);
-        refreshEntries();
+        //$(this).parent().slideUp();
+        //$(this).parent().animate({ width: '0px'}, {duration: 500, complete: function() {$(this).remove();}});
+        //refreshEntries();
         clickedEntry.slideUp();
       });
     });

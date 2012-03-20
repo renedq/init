@@ -1,6 +1,6 @@
 (function() {
   this.view = {
-    clearCurrentToken: clearCurrentToken, // FIXME Why is this public? Does it need to be?
+    clearCurrentPlayer: clearCurrentPlayer, // FIXME Why is this public? Does it need to be?
     setRound: setRound,
     newPlayerName: newPlayerName,
     newPlayerModifier: newPlayerModifier,
@@ -9,7 +9,7 @@
     entryIsValid: entryIsValid
   };
 
-  function clearCurrentToken() {
+  function clearCurrentPlayer() {
     $('#home img.token').attr("src","images/token_blank.png");
   }
 
@@ -26,8 +26,9 @@
   }
 
   function setInitToken(newValue) {
-    view.clearCurrentToken();
+    view.clearCurrentPlayer();
     $($('#home img.token').get(newValue)).attr("src","images/token.jpg");
+    console.log("New currentPlayer in init: " + newValue);
   }
   
   function resetNewPlayerForm() {
