@@ -6,9 +6,11 @@
 
   $(document).ready(function(){
     $('#createEntry form').submit(newPlayerSubmitted);
-    datastore.setValue('currentPlayer', 0);
-    datastore.setValue('round', 1);
+    if (datastore.getValue('currentPlayer') == null){ datastore.setValue('currentPlayer', 0);}
+    if (datastore.getValue('round') == null) { datastore.setValue('round', 1);}
     refreshEntries();
+    view.setRound(datastore.getValue('round'));
+    view.setCurrentPlayer(datastore.getValue('currentPlayer'));
   });
 
   function setRound(round){
@@ -78,7 +80,6 @@
         var clickedEntryId = clickedEntry.data('entryId');
         datastore.deletePlayer(clickedEntryId);
         $(this).parent().animate({ width: '0px'}, {duration: 500, complete: function() {$(this).remove();}});
-        //clickedEntry.slideUp();
       });
     });
   }

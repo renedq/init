@@ -8,9 +8,7 @@
     var playerCount = datastore.getPlayers().length;
     if (playerCount > 0){
       incrementValue('currentPlayer', playerCount, function(currentPlayer){
-        console.log(datastore.getPlayers());
-        console.log("CP:" + currentPlayer);
-        view.setInitToken(currentPlayer); 
+        view.setCurrentPlayer(currentPlayer); 
         if (currentPlayer > playerCount) { nextRound(); }
       });
     }
@@ -20,7 +18,7 @@
     incrementValue('round');
     view.setRound(datastore.getValue('round'));
     datastore.setValue('currentPlayer', 1);
-    view.setInitToken(1);
+    view.setCurrentPlayer(1);
   }
 
   function incrementValue(name, max, callback) {

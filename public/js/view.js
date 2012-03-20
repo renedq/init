@@ -5,7 +5,7 @@
     newPlayerName: newPlayerName,
     newPlayerModifier: newPlayerModifier,
     resetNewPlayerForm: resetNewPlayerForm,
-    setInitToken: setInitToken,
+    setCurrentPlayer: setCurrentPlayer,
     entryIsValid: entryIsValid
   };
 
@@ -25,7 +25,7 @@
     return $('#modifier').val(); 
   }
 
-  function setInitToken(newValue) {
+  function setCurrentPlayer(newValue) {
     view.clearCurrentPlayer();
     $($('#home img.token').get(newValue)).attr("src","images/token.jpg");
   }
