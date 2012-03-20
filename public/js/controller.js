@@ -9,6 +9,7 @@
     if (playerCount > 0){
       incrementValue('currentPlayer', playerCount, function(currentPlayer){
         console.log(datastore.getPlayers());
+        console.log("CP:" + currentPlayer);
         view.setInitToken(currentPlayer); 
         if (currentPlayer > playerCount) { nextRound(); }
       });

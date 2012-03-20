@@ -34,7 +34,7 @@
     var players = _.reject(getPlayers(), function (player){return player.id == id} );
     //FIXME need to change currentPlayer if player <= currentPlayer
     console.log("New Players:");
-    setValue('currentPlayer', 1);
+    setValue('currentPlayer', 0);
     store('players', players);
     console.log(getPlayers());
   }
@@ -48,6 +48,7 @@
     mapPlayers(function(player) {
       player.score=0; 
     });
+    setValue('currentPlayer', 0);
   };
 
   function updateScore(id, score) {

@@ -77,8 +77,8 @@
         var clickedEntry = $(this).parent();
         var clickedEntryId = clickedEntry.data('entryId');
         datastore.deletePlayer(clickedEntryId);
-        //$(this).parent().animate({ width: '0px'}, {duration: 500, complete: function() {$(this).remove();}});
-        clickedEntry.slideUp();
+        $(this).parent().animate({ width: '0px'}, {duration: 500, complete: function() {$(this).remove();}});
+        //clickedEntry.slideUp();
       });
     });
   }
