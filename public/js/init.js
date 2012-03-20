@@ -9,6 +9,8 @@
     if (datastore.getValue('currentPlayer') == null){ datastore.setValue('currentPlayer', 0);}
     if (datastore.getValue('round') == null) { datastore.setValue('round', 1);}
     refreshEntries();
+    view.setRound(datastore.getValue('round'));
+    view.setCurrentPlayer(datastore.getValue('currentPlayer'));
   });
 
   function setRound(round){
@@ -33,6 +35,7 @@
     datastore.setValue('token', 0);
     view.clearCurrentPlayer();
     setRound(1);
+    refreshEntries();
   }
 
   function clearAll(){
@@ -48,8 +51,6 @@
     $('#reset').click(resetInitiative);
     $('#clear').click(clear);
     $('#clearAll').click(clearAll);
-    view.setRound(datastore.getValue('round'));
-    view.setCurrentPlayer(datastore.getValue('currentPlayer'));
     datastore.eachPlayer(function(row) {
       var newEntryRow = $('#entryTemplate').clone();
       newEntryRow.removeAttr('id');
