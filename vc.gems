@@ -1,0 +1,23 @@
+# darkness.gems generated gem export file. Note that any env variable settings will be missing. Append these after using a ';' field separator
+
+bigdecimal -v1.2.0
+coderay -v1.1.0
+eventmachine -v1.0.3
+ffi -v1.9.3
+guard -v2.5.1
+http_parser.rb -v0.5.3
+io-console -v0.4.2
+jasmine-headless-webkit -v0.8.4
+guard-jasmine-headless-webkit -v0.3.2
+listen -v2.7.1
+nio4r -v1.0.0
+pry -v0.9.12.6
+psych -v2.0.0
+rack -v1.5.2
+rake -v0.9.6
+rdoc -v4.0.0
+sprockets -v2.12.0
+test-unit -v2.0.0.0
+thor -v0.18.1
+tilt -v1.4.1
+guard-livereload (2.1.1)
